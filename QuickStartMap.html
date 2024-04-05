@@ -22,18 +22,23 @@
 
   <body>
     <!--  Insert the map div here in the <body> of the page  -->
-     <div id='map'></div>
     
     <!--  Insert the tile div here (part V) -->
-
+     <div id='map'></div>
+    
     <script>
         // Insert the JavaScript within the <script> tags, within the body   
         // Start with the Mapbox access token here
- 
+        mapboxgl.accessToken = 'pk.eyJ1IjoiaWtpbTMiLCJhIjoiY2x1bGpidnJmMGtxejJqbWxzczdkMnhnYSJ9.dtZzt-u1sPGVrkr2CYl00g'; //  Put your access token between the single quotes.
    
         // Then initialize the map here
-   
-    
+         var map = new mapboxgl.Map({
+             container: 'map', // id of a div on your page, where the map will be inserted
+             style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+             center: [-122.6788, 45.5212], // starting position [lng, lat] eg. [-122.6788, 45.5212]
+             zoom: 11 // starting zoom 
+         });
+            
 
         // Add popup markers here  (part IV)
         
