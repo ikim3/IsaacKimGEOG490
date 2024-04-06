@@ -15,7 +15,7 @@
         /* Insert the CSS code here between the <style> tags */
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
-        #title { z-index: 9999; background-color:white; opacity: 80%; text-align: center }
+        #title { z-index: 9999; background-color:yellow; opacity: 80%; text-align: center }
 
     </style>
   </head>
@@ -49,9 +49,9 @@
         var popup = new mapboxgl.Popup({ offset: 25 })
             .setLngLat([-122.679094, 45.515016])
             .setHTML('<a href="https://www.portland.gov/">official website</a>');
-        var popup_layer = new mapboxgl.Popup({closeOnClick: true, anchor: 'top-right'}) 
+        var popup_layer = new mapboxgl.Popup({closeOnClick: true, anchor: 'top-center'}) 
             .setLngLat([-122.679094, 45.515016]) //popup coordinates
-            .setHTML('<h1>Welcome to Portland!</h1>') //popup text
+            .setHTML('<h1>This is Portland!</h1>') //popup text
             .addTo(map); //add this popup to the map!
       
         // Add any other variables such as markers here (part III)
