@@ -15,7 +15,7 @@
         /* Insert the CSS code here between the <style> tags */
         body { margin:0; padding:0; }
         #map { position:absolute; top:0; bottom:0; width:100%; }
-        #title { z-index: 9999; background-color:grey; opacity: 75%; text-align: left }
+        #title { z-index: 9999; background-color:grey; opacity: 75%; text-align: center }
 
     </style>
   </head>
@@ -39,7 +39,7 @@
         // Then initialize the map here
          var map = new mapboxgl.Map({
              container: 'map', // id of a div on your page, where the map will be inserted
-             style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+             style: 'mapbox://styles/mapbox/navigation-day-v1', // stylesheet location
              center: [-122.6788, 45.5212], // starting position [lng, lat] eg. [-122.6788, 45.5212]
              zoom: 11 // starting zoom 
          });
