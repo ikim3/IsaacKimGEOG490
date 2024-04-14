@@ -47,7 +47,14 @@
 
             // 2.4 Add arguments to disable the map interactivity here
             // Disable drag and zoom handlers.
-
+               map.dragPan.disable();
+               map.scrollZoom.disable();
+               map.boxZoom.disable();
+               map.dragRotate.disable();
+               map.keyboard.disable();
+               map.doubleClickZoom.disable();
+               map.touchZoomRotate.disable();
+               map.touchZoomRotate.disableRotation();
 
             // 2.5.3 Then initialize the 2nd map
 
