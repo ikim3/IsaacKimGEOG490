@@ -32,7 +32,7 @@
          mapboxgl.accessToken = 'pk.eyJ1IjoiaWtpbTMiLCJhIjoiY2x1bGpidnJmMGtxejJqbWxzczdkMnhnYSJ9.dtZzt-u1sPGVrkr2CYl00g';
 
             // 2.2 Then initialize the first map
-          var map = new mapboxgl.Map({
+          var Osaka = new mapboxgl.Map({
                container: 'Osaka', // id of a div on your page, where the map will be inserted
                style: 'mapbox://styles/mapbox/outdoors-v12', // the style URL 'mapbox://styles/mapbox/streets-v11' 
                center: [135.484802, 34.672314], // starting position [lng, lat] eg. [-122.6788, 45.5212]
@@ -46,7 +46,7 @@
           var marker = new mapboxgl.Marker({color:'purple'})
               .setLngLat([135.484802, 34.672314]) // starting position [lng, lat]
               .setPopup(popup) //add the popup named "popup" to this marker 
-	      .addTo(map); // add it to the map with the ID "map"
+	      .addTo(Osaka); // add it to the map with the ID "map"
 
             // 2.4 Add arguments to disable the map interactivity here
             // Disable drag and zoom handlers.
