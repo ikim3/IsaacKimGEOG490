@@ -13,6 +13,7 @@
         /* 1.4 Insert the CSS code here between the <style> tags */
         body { margin:50px; padding:0; }
         #map1 { position:relative; height:300px; width:50%;}
+	#map2 { position:relative; height:300px; width:50%;}
         /* 2.5.2 Insert additional CSS code here between the <style> tags */
 
     </style>
@@ -23,6 +24,8 @@
          <h1> Map 1: </h1>
                <div id='map1'></div>
          <hr>
+	 <h1> Map 2:</h1>
+     	       <div id='map2'></div>
         <script>
             /* Insert the JavaScript within the <script> tags, within the body */
             // 2.1 Start with the Mapbox access token
@@ -40,7 +43,7 @@
           var popup = new mapboxgl.Popup()
               .setText('This is my first point.');
 
-          var marker = new mapboxgl.Marker({color:'red'})
+          var marker = new mapboxgl.Marker({color:'orange'})
               .setLngLat([4.897070, 52.377956]) // starting position [lng, lat]
               .setPopup(popup) //add the popup named "popup" to this marker 
 	      .addTo(map); // add it to the map with the ID "map"
@@ -57,10 +60,21 @@
                map.touchZoomRotate.disableRotation();
 
             // 2.5.3 Then initialize the 2nd map
-
+	  var map2 = new mapboxgl.Map({
+	       container: 'map2', // id of a div on your page, where the map will be inserted
+	       style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+	       center: [4.35171, 50.85034], // starting position [lng, lat] eg. [-122.6788, 45.5212]
+	       zoom: 11 // starting zoom 
+           });
 
             // 2.5.4 Add any other variables (such as markers) to the second map
+	 var popup2 = new mapboxgl.Popup()
+	       .setText('This is my second point.');
 
+         var marker2 = new mapboxgl.Marker({color:'red'})
+               .setLngLat([4.35171, 50.85034]) // starting position [lng, lat] 
+               .setPopup(popup2) //add the popup to the marker 
+               .addTo(map2); // id it to the map with the ID *map2*
 
             // 2.5.5 Add arguments to disable the second map's interactivity here
             
