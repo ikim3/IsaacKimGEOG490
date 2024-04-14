@@ -33,18 +33,18 @@
 
             // 2.2 Then initialize the first map
           var map = new mapboxgl.Map({
-               container: 'map1', // id of a div on your page, where the map will be inserted
+               container: 'Osaka', // id of a div on your page, where the map will be inserted
                style: 'mapbox://styles/mapbox/outdoors-v12', // the style URL 'mapbox://styles/mapbox/streets-v11' 
-               center: [4.897070, 52.377956], // starting position [lng, lat] eg. [-122.6788, 45.5212]
+               center: [135.484802, 34.672314], // starting position [lng, lat] eg. [-122.6788, 45.5212]
                zoom: 11 // starting zoom 
            });
 
             // 2.3 Add any other variables (such as popups and markers) to the first map
           var popup = new mapboxgl.Popup()
-              .setText('This is my first point.');
+              .setText('I landed in Osaka and stayed there from August 26 to the 29th last year.');
 
           var marker = new mapboxgl.Marker({color:'orange'})
-              .setLngLat([4.897070, 52.377956]) // starting position [lng, lat]
+              .setLngLat([135.484802, 34.672314]) // starting position [lng, lat]
               .setPopup(popup) //add the popup named "popup" to this marker 
 	      .addTo(map); // add it to the map with the ID "map"
 
@@ -61,25 +61,35 @@
 
             // 2.5.3 Then initialize the 2nd map
 	  var map2 = new mapboxgl.Map({
-	       container: 'map2', // id of a div on your page, where the map will be inserted
+	       container: 'Kyoto', // id of a div on your page, where the map will be inserted
 	       style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-	       center: [4.35171, 50.85034], // starting position [lng, lat] eg. [-122.6788, 45.5212]
+	       center: [135.768326, 35.011665], // starting position [lng, lat] eg. [-122.6788, 45.5212]
 	       zoom: 11 // starting zoom 
            });
 
             // 2.5.4 Add any other variables (such as markers) to the second map
 	 var popup2 = new mapboxgl.Popup()
-	       .setText('This is my second point.');
+	       .setText('I stayed in Kyoto from August 29 to September 1st before taking the Shinkansen to Tokyo.');
 
          var marker2 = new mapboxgl.Marker({color:'red'})
-               .setLngLat([4.35171, 50.85034]) // starting position [lng, lat] 
+               .setLngLat([135.768326, 35.011665]) // starting position [lng, lat] 
                .setPopup(popup2) //add the popup to the marker 
                .addTo(map2); // id it to the map with the ID *map2*
 
             // 2.5.5 Add arguments to disable the second map's interactivity here
-            
+              map2.dragPan.disable();
+	      map2.scrollZoom.disable();
+	      map2.boxZoom.disable();
+	      map2.dragRotate.disable();
+	      map2.keyboard.disable();
+	      map2.doubleClickZoom.disable();
+	      map2.touchZoomRotate.disable();
+	      map2.touchZoomRotate.disableRotation();
+		
             // 2.6 Change the map pointers
-
+	map.getCanvas().style.cursor = 'auto';
+	map2.getCanvas().style.cursor = 'auto';
+		
         </script>
   </body>
 </html>
