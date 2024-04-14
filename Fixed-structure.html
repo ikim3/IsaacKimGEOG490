@@ -32,7 +32,7 @@
           var map = new mapboxgl.Map({
                container: 'map1', // id of a div on your page, where the map will be inserted
                style: 'mapbox://styles/mapbox/outdoors-v12', // the style URL 'mapbox://styles/mapbox/streets-v11' 
-               center: [4.897070, -122.679094], // starting position [lng, lat] eg. [-122.6788, 45.5212]
+               center: [4.897070, 52.377956], // starting position [lng, lat] eg. [-122.6788, 45.5212]
                zoom: 11 // starting zoom 
            });
 
@@ -41,7 +41,7 @@
               .setText('This is my first point.');
 
           var marker = new mapboxgl.Marker({color:'red'})
-              .setLngLat([4.897070, -122.679094]) // starting position [lng, lat]
+              .setLngLat([4.897070, 52.377956]) // starting position [lng, lat]
               .setPopup(popup) //add the popup named "popup" to this marker 
 	      .addTo(map); // add it to the map with the ID "map"
 
