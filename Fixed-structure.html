@@ -31,8 +31,8 @@
             // 2.2 Then initialize the first map
           var map = new mapboxgl.Map({
                container: 'map1', // id of a div on your page, where the map will be inserted
-               style: 'set-the-style-here', // the style URL 'mapbox://styles/mapbox/streets-v11' 
-               center: [-122.6788, 45.5212], // starting position [lng, lat] eg. [-122.6788, 45.5212]
+               style: 'mapbox://styles/mapbox/outdoors-v12', // the style URL 'mapbox://styles/mapbox/streets-v11' 
+               center: [52.377956, 4.897070], // starting position [lng, lat] eg. [-122.6788, 45.5212]
                zoom: 11 // starting zoom 
            });
 
@@ -41,7 +41,7 @@
               .setText('This is my first point.');
 
           var marker = new mapboxgl.Marker({color:'red'})
-              .setLngLat([-122.6788, 45.5212]) // starting position [lng, lat]
+              .setLngLat([52.377956, 4.897070]) // starting position [lng, lat]
               .setPopup(popup) //add the popup named "popup" to this marker 
 		          .addTo(map); // add it to the map with the ID "map"
 
