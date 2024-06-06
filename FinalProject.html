@@ -1,0 +1,2871 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' /> 
+    <title>World Heritage sites in Korea</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css' rel='stylesheet' />
+    <!-- CSS for the chevrons -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+   <!--   Link to Google font-->
+   <link rel="preconnect" href="https://fonts.gstatic.com">
+   <link href="https://fonts.googleapis.com/css2?family=Martel&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    
+    
+    <style>
+        
+        
+   /*  stlye for paragraph tags */
+   button > p, .descriptionPanel > p {
+     color: white;
+   }
+
+   /* style for heading level 4 tags */
+   h4 {
+     color: white;
+     margin-left: 10px;
+   }
+
+   /*  style for items with the class "LegendContainer" */
+   .LegendContainer {
+     position: absolute;
+     bottom: 20px;
+     right: 20px;
+     z-index: 2;
+     width: 350px;
+     height: 40px;
+     background: rgba(80, 80, 80, .9);
+     transition: width 2s, height 2s; /* this is the time it takes for the container to transition */
+     border-radius: 7px;
+   }
+        
+        /* Overrides the pop-up width slightly bigger min-width than the default Mapbox CSS*/
+         .mapboxgl-popup {
+            min-width: 325px;
+            /*add the css for the popup font here */
+            font-family: 'Martel', serif;
+        } 
+
+   /*  style for items with the class "descriptionPanel" */
+   .descriptionPanel {
+     position: absolute;
+     bottom: 65px;
+     right: 20px;
+     z-index: 2;
+     width: 350px;
+     height: 40px;
+     background: rgba(80, 80, 80, .9);
+     transition: width 2s, height 2s;
+     overflow: hidden;
+     border-radius: 7px;
+   }
+        
+        #leftPanel{
+            padding-left: 25px;
+            height:100%;
+            width: 350px
+        }
+
+   /*  style for items with the class "descriptionPanel" when active */
+   .LegendContainer:active {
+     width: 240px;
+     height: 250px;
+   }
+
+   /* style for items with the class "legendItem" */
+   .legendItem {
+       margin: 0px;
+       padding-right: 10px;
+       display:inline-block;
+       margin:auto;
+       transform: translate(50%,50%);
+   }
+        
+
+   /* style for items with the class "layerDescription" */
+   .layerDescription {
+     color: white;
+     padding-left: 0px;
+   }
+
+        
+   .cultural{
+         color: #3388FF;
+   }
+   .natural{
+         color: #00c04b;
+   }
+
+   /* style for items with the class "chevron" */
+   .chevron {
+     position: relative;
+     margin-left: 45%;
+     font-size: x-large;
+     color: white;
+   }
+        
+    .markerStyle1 {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Eo_circle_blue_blank.svg/640px-Eo_circle_blue_blank.svg.png');
+      background-size: cover;
+      width: 27px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+        
+    .markerStyle2 {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Eo_circle_green_blank.svg/2048px-Eo_circle_green_blank.svg.png');
+      background-size: cover;
+      width: 27px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+        
+   /* CSS for a full page map   */
+   body { margin:0; padding:0; }
+     
+       #map { 
+           position:absolute; 
+           top:0; 
+           bottom:0; 
+           right:0px; 
+           width:81%; }
+        
+      .clickableC{
+          color: blue;
+          cursor: pointer;
+        }
+        
+      .clickableN{
+          color: green;
+          cursor: pointer;
+        }
+        
+       h1 {text-align: center left;}
+        
+    .scrolling-element-inside {
+      direction: ltr;
+    }
+
+    </style>
+</head>
+<body>
+    
+    <div id="leftPanel"> 
+    <div class="w3-sidebar w3-bar-block w3-medium w3-white" style="width:20%">
+     <p style="margin-left: 10px; margin-right: 10px;">
+         <font size="+1"><i><b>Cultural Sites</b></i></font>
+     </p>
+        <p ><u><span onclick="flyToCity(0, 18)" class="clickableC">Seokguram Grotto</span> and <span onclick="flyToCity(1, 18)" class="clickableC">Bulguksa Temple</span></u></p>
+        
+        <p ><u><span onclick="flyToCity(2, 18)" class="clickableC">Haeinsa Temple</span> Janggyeong Panjeon, the Depositories for the Tripitaka Koreana Woodblocks</u></p>
+        
+        <p > <u><span onclick="flyToCity(3, 18)" class="clickableC">Jongmyo Shrine</span></u></p>        
+        <p > <u><span onclick="flyToCity(4, 18)" class="clickableC">Changdeokgung Palace Complex</span></u></p>  
+        
+        <p > <u><span onclick="flyToCity(5, 16)" class="clickableC">Hwaseong Fortress</span></u></p>  
+
+        <p ><u>Gochang, Hwasun and Ganghwa Dolmen Sites</u></p>
+        <p >- <span onclick="flyToCity(6, 16)" class="clickableC">Mt. Namsan Belt</span></p>
+        <p >- <span onclick="flyToCity(7, 16)" class="clickableC">The Wolseong Belt</span></p>
+        <p >- <span onclick="flyToCity(8, 16)" class="clickableC">The Tumuli Belt</span></p>
+        <p >- <span onclick="flyToCity(9, 16)" class="clickableC">The Hwangnyongsa Belt</span></p>
+        <p >- <span onclick="flyToCity(10, 16)" class="clickableC">The Sanseong Belt</span></p>
+        
+        <p ><u>Gochang, Hwasun and Ganghwa Dolmen Sites</u></p>
+        <p >- <span onclick="flyToCity(11, 16)" class="clickableC">Gochang Dolmen Sites</span></p>
+        <p >- <span onclick="flyToCity(12, 16)" class="clickableC">Hwasun Dolmen Sites</span></p>
+        <p >- <span onclick="flyToCity(13, 16)" class="clickableC">Ganghwa Dolmen Sites</span></p>
+        
+        <p ><u>Royal Tombs of the Joseon dynasty</u></p>
+        <p >- <span onclick="flyToCity(17, 17)" class="clickableC">Donggureung Cluster</span></p>
+        <p >- <span onclick="flyToCity(18, 17)" class="clickableC">Hongyureung Cluster</span></p>
+        <p >- <span onclick="flyToCity(19, 17)" class="clickableC">Sareung Cluster</span></p>
+        <p >- <span onclick="flyToCity(20, 17)" class="clickableC">Gwangneung Cluster</span></p>
+        <p >- <span onclick="flyToCity(21, 17)" class="clickableC">Yeongneung Cluster</span></p>
+        <p >- <span onclick="flyToCity(22, 17)" class="clickableC">Jangneung Cluster (Yeongwol)</span></p>
+        <p >- <span onclick="flyToCity(23, 17)" class="clickableC">Seolleung Cluster</span></p>
+        <p >- <span onclick="flyToCity(24, 17)" class="clickableC">Heolleung Cluster</span></p>
+        <p >- <span onclick="flyToCity(25, 17)" class="clickableC">Taereung Cluster</span></p>
+        <p >- <span onclick="flyToCity(26, 17)" class="clickableC">Jeongneung Cluster</span></p>
+        <p >- <span onclick="flyToCity(27, 17)" class="clickableC">Uireung Cluster</span></p>
+        <p >- <span onclick="flyToCity(28, 17)" class="clickableC">Seooreung Cluster</span></p>
+        <p >- <span onclick="flyToCity(29, 17)" class="clickableC">Seosamneung Cluster</span></p>
+        <p >- <span onclick="flyToCity(30, 17)" class="clickableC">Olleung Cluster</span></p>
+        <p >- <span onclick="flyToCity(31, 17)" class="clickableC">Paju Samneung Cluster</span></p>
+        <p >- <span onclick="flyToCity(32, 17)" class="clickableC">Jangneung Cluster (Paju)</span></p>
+        <p >- <span onclick="flyToCity(33, 17)" class="clickableC">Jangneung Cluster (Gimpo)</span></p>
+        <p >- <span onclick="flyToCity(34, 17)" class="clickableC">Yungneung Cluster</span></p>
+        
+        <p ><u>Historic Villages of Korea: <span onclick="flyToCity(35, 18)" class="clickableC">Hahoe</span> and <span onclick="flyToCity(36, 18)" class="clickableC">Yangdong</span></u></p>
+        
+        <p > <u><span onclick="flyToCity(37, 18)" class="clickableC">Namhansanseong</span></u></p> 
+        
+        <p ><u>Baekje Historic Areas</u></p>
+        <p >- <span onclick="flyToCity(38, 16)" class="clickableC">Gongsanseong Fortress</span></p>
+        <p >- <span onclick="flyToCity(39, 16)" class="clickableC">Royal Tombs in Songsan-ri</span></p>
+        <p >- <span onclick="flyToCity(40, 16)" class="clickableC">Archeological Site in Gwanbuk-ri and Busosanseong Fortress</span></p>
+        <p >- <span onclick="flyToCity(41, 18)" class="clickableC">Jeongnimsa Temple</span></p>
+        <p >- <span onclick="flyToCity(42, 16)" class="clickableC">Royal Tombs in Neungsan-ri	</span></p>
+        <p >- <span onclick="flyToCity(43, 16)" class="clickableC">Naseong City Wall</span></p>
+        <p >- <span onclick="flyToCity(44, 16)" class="clickableC">Archeological Site in Wanggung-ri</span></p>
+        <p >- <span onclick="flyToCity(45, 18)" class="clickableC">Mireuksa Temple</span></p>
+        
+        <p ><u>Sansa, Buddhist Mountain Monasteries in Korea</u></p>
+        <p >- <span onclick="flyToCity(46, 18)" class="clickableC">Tongdosa Temple</span></p>
+        <p >- <span onclick="flyToCity(47, 18)" class="clickableC">Buseoksa Temple</span></p>
+        <p >- <span onclick="flyToCity(48, 18)" class="clickableC">Bongjeongsa Temple</span></p>
+        <p >- <span onclick="flyToCity(49, 18)" class="clickableC">Beopjusa Temple</span></p>
+        <p >- <span onclick="flyToCity(50, 18)" class="clickableC">Magoksa Temple</span></p>
+        <p >- <span onclick="flyToCity(51, 18)" class="clickableC">Seonamsa Temple</span></p>
+        <p >- <span onclick="flyToCity(52, 18)" class="clickableC">Daeheungsa Temple</span></p>
+        
+        <p ><u>Seowon, Korean Neo-Confucian Academies</u></p>
+        <p >- <span onclick="flyToCity(53, 18)" class="clickableC">Sosu-seowon</span></p>
+        <p >- <span onclick="flyToCity(54, 18)" class="clickableC">Namgye-seowon</span></p>
+        <p >- <span onclick="flyToCity(55, 18)" class="clickableC">Oksan-seowon</span></p>
+        <p >- <span onclick="flyToCity(56, 18)" class="clickableC">Dosan-seowon</span></p>
+        <p >- <span onclick="flyToCity(57, 18)" class="clickableC">Piram-seowon</span></p>
+        <p >- <span onclick="flyToCity(58, 18)" class="clickableC">Dodong-seowon</span></p>
+        <p >- <span onclick="flyToCity(59, 18)" class="clickableC">Byeongsan-seowon</span></p>
+        <p >- <span onclick="flyToCity(60, 18)" class="clickableC">Museong-seowon</span></p>
+        <p >- <span onclick="flyToCity(61, 18)" class="clickableC">Donam-seown</span></p>
+        
+        <p ><u>Gaya Tumuli</u></p>
+        <p >- <span onclick="flyToCity(66, 18)" class="clickableC">Daeseong-dong Tumuli</span></p>
+        <p >- <span onclick="flyToCity(67, 18)" class="clickableC">Marisan Tumuli</span></p>
+        <p >- <span onclick="flyToCity(68, 18)" class="clickableC">Okjeon Tumuli</span></p>
+        <p >- <span onclick="flyToCity(69, 18)" class="clickableC">Jisan-dong Tumuli</span></p>
+        <p >- <span onclick="flyToCity(70, 18)" class="clickableC">Songhak-dong Tumuli</span></p>
+        <p >- <span onclick="flyToCity(71, 18)" class="clickableC">Yugok-ri and Durak-ri Tumuli</span></p>
+        <p >- <span onclick="flyToCity(72, 18)" class="clickableC">Gyo-dong and Songhyeon-dong Tumuli</span></p>
+        
+     <p style="margin-left: 10px; margin-right: 10px;">
+       <font size="+1"><i><b>Natural Sites</b></i></font>
+     </p>
+        <p ><u>Jeju Volcanic Island and Lava Tubes</u></p>
+        <p >- <span onclick="flyToCity(14, 16)" class="clickableN">Hallasan Natural Reserve</span></p>
+        <p >- <span onclick="flyToCity(15, 16)" class="clickableN">Geomunoreum Lava Tube System</span></p>
+        <p >- <span onclick="flyToCity(16, 16)" class="clickableN">Seongsan Ilchulbong Tuff Cone</span></p>
+        
+        <p ><u>Getbol, Korean Tidal Flats</u></p>
+        <p >- <span onclick="flyToCity(62, 14)" class="clickableN">Seocheon Getbol</span></p>
+        <p >- <span onclick="flyToCity(63, 14)" class="clickableN">Gochang Getbol</span></p>
+        <p >- <span onclick="flyToCity(64, 14)" class="clickableN">Shinan Getbol</span></p>
+        <p >- <span onclick="flyToCity(65, 14)" class="clickableN">Boseong-Suncheon Getbol</span></p>
+     </div> 
+    </div>
+    <div id='map'></div>
+    <br/>
+    
+   <div class="descriptionPanel" id="descriptionPanel" style="height: 350px;">
+     <span onClick=panelSelect() id="glyph" class="chevron glyphicon glyphicon-chevron-down"></span>
+     <hr/>
+     <h4>UNESCO WORLD HERITAGE SITES IN THE REPIBLIC OF KOREA</h4>
+     <p style="margin-left: 10px; margin-right: 10px;">
+       This is a map showing places of important cultural or natural heritage found in Korea.
+     </p>
+     <p style="margin-left: 10px; margin-right: 10px;">
+       There is a interactive list on the left where you can click on a place wether its cultural or natural. When clicked, it will automatically zoom to the destination. Clicking on the point on the map will show a image along with a brief description of the site with its location and inscribed year. 
+     </p>
+   </div>
+      <!-- help users differentiate between the layer colors -->
+   <div class="LegendContainer">
+     <div class="legendItem">
+         <span class="cultural">&#11044;</span>
+         <span class="layerDescription">Cultural Sites</span>
+     </div>
+     <div class="legendItem">
+         <span class="natural">&#11044;</span>
+         <span class="layerDescription">Natural Sites</span>
+     </div>
+   </div>
+    <script>
+     // enable the user to show and hide the map description added in the last section 
+      var state = { panelOpen: true };
+
+      function panelSelect(e){
+        if(state.panelOpen){
+          document.getElementById('descriptionPanel').style.height = '26px';
+          document.getElementById('glyph').className = "chevron glyphicon glyphicon-chevron-up";
+          state.panelOpen = false;
+        } else {
+          document.getElementById('descriptionPanel').style.height = '410px';
+          document.getElementById('glyph').className = "chevron glyphicon glyphicon-chevron-down";
+          state.panelOpen = true;
+        }
+      }
+        
+        mapboxgl.accessToken = 'pk.eyJ1Ijoiam9tZXJzb24iLCJhIjoiY2o1bXE2bHlyMnJhZDMzbnpyMnhlODdpcSJ9.QJMJ_cTFCY050aZfSn1umQ';
+        
+		var bounds = [
+		    [121.696503, 32.127652], // Southwest coordinates
+		    [133.965740, 39.154291] // Northeast coordinates 
+		];
+        
+        // initialize the map
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [128.7669,35.9078],
+            zoom: 6.75,
+            minZoom: 4,
+            maxBounds: bounds // Sets bounds from variable above
+        });
+        
+        // data sources used from UNESCo World Heritage List Database: https://whc.unesco.org/en/syndication
+      var WHC_sites =  {
+  "type": "FeatureCollection",
+  "features": [
+      
+       /* Seokguram Grotto and Bulguksa Temple */
+      
+      {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 869,
+        "id_no": 736,
+        "rev_bis": "",
+        "name_en": "Seokguram Grotto",
+        "short_description_en": "<p>Established in the 8th century on the slopes of Mount Toham, the Seokguram Grotto contains a monumental statue of the Buddha looking at the sea in the <em>bhumisparsha mudra</em> position. With the surrounding portrayals of gods, Bodhisattvas and disciples, all realistically and delicately sculpted in high and low relief, it is considered a masterpiece of Buddhist art in the Far East. The Temple of Bulguksa (built in 774) and the Seokguram Grotto form a religious architectural complex of exceptional significance.</p>",
+        "justification_en": "",
+        "date_inscribed": 1995,
+        "area_hectares": 0,
+        "criteria_txt": "(i)(iv)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.349029,
+          35.791498
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 869,
+        "id_no": 736,
+        "rev_bis": "",
+        "name_en": "Bulguksa Temple",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.3321,
+          35.7902
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 870,
+        "id_no": 737,
+        "rev_bis": "",
+        "name_en": "Haeinsa Temple Janggyeong Panjeon, the Depositories for the <I>Tripitaka Koreana</I> Woodblocks",
+        "short_description_en": "<p>The Temple of Haeinsa, on Mount Gaya, is home to the <em>Tripitaka Koreana</em> , the most complete collection of Buddhist texts, engraved on 80,000 woodblocks between 1237 and 1248. The buildings of Janggyeong Panjeon, which date from the 15th century, were constructed to house the woodblocks, which are also revered as exceptional works of art. As the oldest depository of the <em>Tripitaka</em> , they reveal an astonishing mastery of the invention and implementation of the conservation techniques used to preserve these woodblocks.</p>",
+        "justification_en": "",
+        "date_inscribed": 1995,
+        "area_hectares": 0,
+        "criteria_txt": "(iv)(vi)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.098711,
+          35.801672
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 871,
+        "id_no": 738,
+        "rev_bis": "",
+        "name_en": "Jongmyo Shrine",
+        "short_description_en": "<p>Jongmyo is the oldest and most authentic of the Confucian royal shrines to have been preserved. Dedicated to the forefathers of the Joseon dynasty (1392–1910), the shrine has existed in its present form since the 16th century and houses tablets bearing the teachings of members of the former royal family. Ritual ceremonies linking music, song and dance still take place there, perpetuating a tradition that goes back to the 14th century.</p>",
+        "justification_en": "",
+        "date_inscribed": 1995,
+        "area_hectares": 19.4,
+        "criteria_txt": "(iv)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9936111,
+          37.57472222
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 964,
+        "id_no": 816,
+        "rev_bis": "",
+        "name_en": "Changdeokgung Palace Complex",
+        "short_description_en": "<p>In the early 15th century, the King Taejong ordered the construction of a new palace at an auspicious site. A Bureau of Palace Construction was set up to create the complex, consisting of a number of official and residential buildings set in a garden that was cleverly adapted to the uneven topography of the 58-ha site. The result is an exceptional example of Far Eastern palace architecture and design, blending harmoniously with the surrounding landscape.</p>",
+        "justification_en": "<p>The Committee decided to inscribe this property on the basis of criteria (ii), (iii) and (iv), considering that the Changdeogung Palace Complex is an outstanding example of Far Eastern palace architecture and garden design, exceptional for the way in which the buildings are integrated into and harmonized with the natural setting, adapting to the topography and retaining indigenous tree cover.</p>",
+        "date_inscribed": 1997,
+        "area_hectares": 0,
+        "criteria_txt": "(ii)(iii)(iv)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9911111,
+          37.57888889
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 965,
+        "id_no": 817,
+        "rev_bis": "",
+        "name_en": "Hwaseong Fortress",
+        "short_description_en": "<p>When the Joseon King Jeongjo moved his father's tomb to Suwon at the end of the 18th century, he surrounded it with strong defensive works, laid out according to the precepts of an influential military architect of the period, who brought together the latest developments in the field from both East and West. The massive walls, extending for nearly 6 km, still survive; they are pierced by four gates and equipped with bastions, artillery towers and other features.</p>",
+        "justification_en": "<p>The Committee decided to inscribe this property on the basis of criteria (ii) and (iii), considering that the Hwaseong Fortress is an outstanding example of early modern military architecture, incorporating the most highly developed features of that science from both east and west.</p>",
+        "date_inscribed": 1997,
+        "area_hectares": 0,
+        "criteria_txt": "(ii)(iii)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0119,
+          37.2871
+        ]
+      }
+    },
+      
+      /* Gyeongju Historic Areas */
+      
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1140,
+        "id_no": 976,
+        "rev_bis": "",
+        "name_en": "Gyeongju Historic Areas: Mt. Namsan Belt",
+        "short_description_en": "<p>The Gyeongju Historic Areas contain a remarkable concentration of outstanding examples of Korean Buddhist art, in the form of sculptures, reliefs, pagodas, and the remains of temples and palaces from the flowering, in particular between the 7th and 10th centuries, of this form of unique artistic expression.</p>",
+        "justification_en": "<p>Criterion (ii) The Gyeongju Historic Areas contain a number of sites and monuments of exceptional significance in the development of Buddhist and secular architecture in Korea. Criterion (iii) The Korean peninsula was ruled for nearly a thousand years by the Silla dynasty, and the sites and monuments in and around Gyeongju (including the holy mountain of Namsan) bear outstanding testimony to its cultural achievements.</p>",
+        "date_inscribed": 2000,
+        "area_hectares": 2880,
+        "criteria_txt": "(ii)(iii)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.2390000,
+          35.8580000
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1140,
+        "id_no": 976,
+        "rev_bis": "",
+        "name_en": "Gyeongju Historic Areas: The Wolseong Belt",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.2199972,
+          35.8299972
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1140,
+        "id_no": 976,
+        "rev_bis": "",
+        "name_en": "Gyeongju Historic Areas: The Tumuli Belt",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.2000000,
+          35.8400000
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1140,
+        "id_no": 976,
+        "rev_bis": "",
+        "name_en": "Gyeongju Historic Areas: The Hwangnyongsa Belt",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.1300000,
+          35.8430000
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1140,
+        "id_no": 976,
+        "rev_bis": "",
+        "name_en": "Gyeongju Historic Areas: The Sanseong Belt",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.1599972,
+          35.8419972
+        ]
+      }
+    },
+    
+      /* Gochang, Hwasun and Ganghwa Dolmen Sites */
+      
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1141,
+        "id_no": 977,
+        "rev_bis": "",
+        "name_en": "Gochang, Hwasun and Ganghwa Dolmen Sites: Gochang Dolmen Sites",
+        "short_description_en": "<p>The prehistoric cemeteries at Gochang, Hwasun, and Ganghwa contain many hundreds of examples of dolmens - tombs from the 1st millennium BC constructed of large stone slabs. They form part of the Megalithic culture, found in many parts of the world, but nowhere in such a concentrated form.</p>",
+        "justification_en": "<p>Criterion (iii) The global prehistoric technological and social phenomenon that resulted in the appearance in the 2nd and 3rd millennia BCE of funerary and ritual monuments constructed of large stones (the \"Megalithic Culture\") is nowhere more vividly illustrated than in the dolmen cemeteries of Gochang, Hwasun, and Ganghwa.</p>",
+        "date_inscribed": 2000,
+        "area_hectares": 51.65,
+        "criteria_txt": "(iii)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.6492700,
+          35.4472269
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1141,
+        "id_no": 977,
+        "rev_bis": "",
+        "name_en": "Gochang, Hwasun and Ganghwa Dolmen Sites: Hwasun Dolmen Sites",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9171611,
+          34.9867281
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1141,
+        "id_no": 977,
+        "rev_bis": "",
+        "name_en": "Gochang, Hwasun and Ganghwa Dolmen Sites: Ganghwa Dolmen Sites",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.4372300,
+          37.7738250
+        ]
+      }
+    },
+    
+      /* Jeju Volcanic Island and Lava Tubes */
+   
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2314,
+        "id_no": 1264,
+        "rev_bis": "",
+        "name_en": "Jeju Volcanic Island and Lava Tubes: Hallasan Natural Reserve",
+        "short_description_en": "<p>Jeju Volcanic Island and Lava Tubes together comprise three sites that make up 18,846 ha. It includes Geomunoreum, regarded as the finest lava tube system of caves anywhere, with its multicoloured carbonate roofs and floors, and dark-coloured lava walls; the fortress-like Seongsan Ilchulbong tuff cone, rising out of the ocean, a dramatic landscape; and Mount Halla, the highest in Korea, with its waterfalls, multi-shaped rock formations, and lake-filled crater. The site, of outstanding aesthetic beauty, also bears testimony to the history of the planet, its features and processes.</p>",
+        "justification_en": "",
+        "date_inscribed": 2007,
+        "area_hectares": 9521.8,
+        "criteria_txt": "(vii)(viii)",
+        "category": "Natural",
+        "category_short": "N",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.5252778,
+          33.3586111
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2314,
+        "id_no": 1264,
+        "rev_bis": "",
+        "name_en": "Jeju Volcanic Island and Lava Tubes: Geomunoreum Lava Tube System",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.7861000,
+          33.5563000
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2314,
+        "id_no": 1264,
+        "rev_bis": "",
+        "name_en": "Jeju Volcanic Island and Lava Tubes: Seongsan Ilchulbong Tuff Cone",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9422222,
+          33.4577778
+        ]
+      }
+    },
+    
+      /* Royal Tombs of the Joseon Dynasty */
+   
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Donggureung Cluster",
+        "short_description_en": "<p>The Royal Tombs of the Joseon Dynasty form a collection of 40 tombs scattered over 18 locations. Built over five centuries, from 1408 to 1966, the tombs honoured the memory of ancestors, showed respect for their achievements, asserted royal authority, protected ancestral spirits from evil and provided protection from vandalism. Spots of outstanding natural beauty were chosen for the tombs which typically have their back protected by a hill as they face south toward water and, ideally, layers of mountain ridges in the distance. Alongside the burial area, the royal tombs feature a ceremonial area and an entrance. In addition to the burial mounds, associated buildings that are an integral part of the tombs include a T-shaped wooden shrine, a shed for stele, a royal kitchen and a guards&rsquo; house, a red-spiked gate and the tomb keeper&rsquo;s house. The grounds are adorned on the outside with a range of stone objects including figures of people and animals. The Joseon Tombs completes the 5,000 year history of royal tombs architecture in the Korean peninsula.</p>",
+        "justification_en": "",
+        "date_inscribed": 2009,
+        "area_hectares": 1891.2,
+        "criteria_txt": "(iii)(iv)(vi)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.1311111,
+          37.6250000
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Hongyureung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.2122222,
+          37.6308333
+        ]
+      },
+    }, 
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Sareung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.2097222,
+          37.6400000
+        ]
+      },
+    }, 
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Gwangneung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.1763889,
+          37.7530556
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Yeongneung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.6027778,
+          37.3075000
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Jangneung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.4530556,
+          37.1975000
+        ]
+      },
+    }, 
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Seolleung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0455556,
+          37.5086111
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Heolleung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0827778,
+          37.4658333
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Taereung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0969444,
+          37.6347222
+        ]
+      },
+    }, 
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Jeongneung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0055556,
+          37.6022222
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Uireung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0566667,
+          37.6033333
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Seooreung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.8944444,
+          37.6355556
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Seosamneung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.8700000,
+          37.6633333
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Olleung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9508333,
+          37.7200000
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Pajusamneung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.8302778,
+          37.7452778
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Jangneung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.7080556,
+          37.7733333
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Jangneung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.7108333,
+          37.6130556
+        ]
+      },
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1957,
+        "id_no": 1319,
+        "rev_bis": "Bis",
+        "name_en": "Royal Tombs of the Joseon Dynasty: Yungneung Cluster",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9938889,
+          37.2116667
+        ]
+      },
+    },
+      
+       /* Historic Villages of Korea: Hahoe and Yangdong */
+     
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1688,
+        "id_no": 1324,
+        "rev_bis": "",
+        "name_en": "Hahoe Folk Village",
+        "short_description_en": "<p>Founded in the 14th-15th centuries, Hahoe and Yangdong are seen as the two most representative historic clan villages in the Republic of Korea. Their layout and location - sheltered by forested mountains and facing out onto a river and open agricultural fields – reflect the distinctive aristocratic Confucian culture of the early part of the Joseon Dynasty (1392-1910). The villages were located to provide both physical and spiritual nourishment from their surrounding landscapes. They include residences of the head families, together with substantial timber framed houses of other clan members, also pavilions, study halls, Confucian academies for learning, and clusters of one story mud-walled, thatched-roofed houses, formerly for commoners. The landscapes of mountains, trees and water around the village, framed in views from pavilions and retreats, were celebrated for their beauty by 17th and 18th century poets.</p>",
+        "justification_en": "",
+        "date_inscribed": 2010,
+        "area_hectares": 599.6,
+        "criteria_txt": "(iii)(iv)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.5166667,
+          36.53916667
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1688,
+        "id_no": 1324,
+        "rev_bis": "",
+        "name_en": "Yangdong Folk Village",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.2533333,
+          36.0019444
+        ]
+      }
+    },
+      
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 1982,
+        "id_no": 1439,
+        "rev_bis": "",
+        "name_en": "Namhansanseong",
+        "short_description_en": "<p>Namhansanseong was designed as an emergency capital for the Joseon dynasty (1392–1910), in a mountainous site 25 km south-east of Seoul. Built and defended by Buddhist monk-soldiers, it could accommodate 4,000 people and fulfilled important administrative and military functions. Its earliest remains date from the 7th century, but it was rebuilt several times, notably in the early 17th century in anticipation of an attack from the Sino-Manchu Qing dynasty. The city embodies a synthesis of the defensive military engineering concepts of the period, based on Chinese and Japanese influences, and changes in the art of fortification following the introduction from the West of weapons using gunpowder. A city that has always been inhabited, and which was the provincial capital over a long period, it contains evidence of a variety of military, civil and religious buildings and has become a symbol of Korean sovereignty.</p>",
+        "justification_en": "",
+        "date_inscribed": 2014,
+        "area_hectares": 409.06,
+        "criteria_txt": "(ii)(iv)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.1811111,
+          37.47888889
+        ]
+      }
+    },
+      
+       /* Baekje Historic Areas */
+   
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2038,
+        "id_no": 1477,
+        "rev_bis": "",
+        "name_en": "Baekje Historic Areas: Gongsanseong Fortress",
+        "short_description_en": "<p>Located in the mountainous mid-western region of the Republic of Korea, this property comprises eight archaeological sites dating from 475 to 660 CE, including the Gongsanseong fortress and royal tombs at Songsan-ri related to the capital, Ungjin (present day Gongju), the Busosanseong Fortress and Gwanbuk-ri administrative buildings, the Jeongnimsa Temple, the royal tombs in Neungsan-ri and the Naseong city wall related to the capital, Sabi (now Buyeo), the royal palace at Wanggung-ri and the Mireuksa Temple in Iksan related to the secondary Sabi capital. Together, these sites represent the later period of the Baekje Kingdom – one of the three earliest kingdoms on the Korean peninsula (18 BCE to 660 CE) - during which time they were at the crossroads of considerable technological, religious (Buddhist), cultural and artistic exchanges between the ancient East Asian kingdoms in Korea, China and Japan.</p>",
+        "justification_en": "",
+        "date_inscribed": 2015,
+        "area_hectares": 135.1,
+        "criteria_txt": "(ii)(iii)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.1272222,
+          36.46194444
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2038,
+        "id_no": 1477,
+        "rev_bis": "",
+        "name_en": "Baekje Historic Areas: Royal Tombs in Songsan-ri",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.1141667,
+          36.4630556
+        ]
+      }
+    }, 
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2038,
+        "id_no": 1477,
+        "rev_bis": "",
+        "name_en": "Baekje Historic Areas: Archeological Site in Gwanbuk-ri and Busosanseong Fortress",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9150000,
+          36.2897222
+        ]
+      }
+    }, 
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2038,
+        "id_no": 1477,
+        "rev_bis": "",
+        "name_en": "Baekje Historic Areas: Jeongnimsa Temple",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9133333,
+          36.2788889
+        ]
+      }
+    }, 
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2038,
+        "id_no": 1477,
+        "rev_bis": "",
+        "name_en": "Baekje Historic Areas: Royal Tombs in Neungsan-ri",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9441667,
+          36.2783333
+        ]
+      }
+    }, 
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2038,
+        "id_no": 1477,
+        "rev_bis": "",
+        "name_en": "Baekje Historic Areas: Naseong City Wall",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9402778,
+          36.2727778
+        ]
+      }
+    }, 
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2038,
+        "id_no": 1477,
+        "rev_bis": "",
+        "name_en": "Baekje Historic Areas: Archeological Site in Wanggung-ri",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0555556,
+          35.9750000
+        ]
+      }
+    }, 
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2038,
+        "id_no": 1477,
+        "rev_bis": "",
+        "name_en": "Baekje Historic Areas: Mireuksa Temple",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0308333,
+          36.0116667
+        ]
+      }
+    }, 
+      
+       /* Sansa, Buddhist Mountain Monasteries in Korea */     
+      
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2227,
+        "id_no": 1562,
+        "rev_bis": "",
+        "name_en": "Sansa, Buddhist Mountain Monasteries in Korea: Tongdosa Temple",
+        "short_description_en": "<p>The Sansa are Buddhist mountain monasteries located throughout the southern provinces of the Korean Peninsula. The spatial arrangement of the seven temples that comprise the property, established from the 7th to 9th centuries, present common characteristics that are specific to Korea – the ‘madang’ (open courtyard) flanked by four buildings (Buddha Hall, pavilion, lecture hall and dormitory). They contain a large number of individually remarkable structures, objects, documents and shrines. These mountain monasteries are sacred places, which have survived as living centres of faith and daily religious practice to the present.</p>",
+        "justification_en": "",
+        "date_inscribed": 2018,
+        "area_hectares": 55.43,
+        "criteria_txt": "(iii)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.0655556,
+          35.4880556
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2227,
+        "id_no": 1562,
+        "rev_bis": "",
+        "name_en": "Sansa, Buddhist Mountain Monasteries in Korea: Buseoksa Temple",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.6875000,
+          36.9988889
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2227,
+        "id_no": 1562,
+        "rev_bis": "",
+        "name_en": "Sansa, Buddhist Mountain Monasteries in Korea: Bongjeongsa Temple",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.6630556,
+          36.6533333
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2227,
+        "id_no": 1562,
+        "rev_bis": "",
+        "name_en": "Sansa, Buddhist Mountain Monasteries in Korea: Beopjusa Temple",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.8333333,
+          36.54194444
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2227,
+        "id_no": 1562,
+        "rev_bis": "",
+        "name_en": "Sansa, Buddhist Mountain Monasteries in Korea: Magoksa Temple",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.0119444,
+          36.5588889
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2227,
+        "id_no": 1562,
+        "rev_bis": "",
+        "name_en": "Sansa, Buddhist Mountain Monasteries in Korea: Seonamsa Temple",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.3311111,
+          34.9958333
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2227,
+        "id_no": 1562,
+        "rev_bis": "",
+        "name_en": "Sansa, Buddhist Mountain Monasteries in Korea: Daeheungsa Temple",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.6169444,
+          34.4755556
+        ]
+      }
+    },
+      
+         /* Seowon, Korean Neo-Confucian Academies */    
+      
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2278,
+        "id_no": 1498,
+        "rev_bis": "",
+        "name_en": "Seowon, Korean Neo-Confucian Academies: Sosu-seowon",
+        "short_description_en": "<p>The property is located in central and southern parts of the Republic of Korea, and comprises nine <em>seowon</em>, representing a type of Neo-Confucian academy of the Joseon dynasty (15th -19th centuries CE). Learning, veneration of scholars and interaction with the environment were the essential functions of the <em>seowons</em>, expressed in their design. Situated near mountains and water sources, they favoured the appreciation of nature and cultivation of mind and body. The pavilion-style buildings were intended to facilitate connections to the landscape. The <em>seowons</em> illustrate a historical process in which Neo-Confucianism from China was adapted to Korean conditions.</p>",
+        "justification_en": "",
+        "date_inscribed": 2019,
+        "area_hectares": 102.49,
+        "criteria_txt": "(iii)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.5801056,
+          36.9254056
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2278,
+        "id_no": 1498,
+        "rev_bis": "",
+        "name_en": "Seowon, Korean Neo-Confucian Academies: Namgye-seowon",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.7832528,
+          35.5484889
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2278,
+        "id_no": 1498,
+        "rev_bis": "",
+        "name_en": "Seowon, Korean Neo-Confucian Academies: Oksan-seowon",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.1633056,
+          36.0117056
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2278,
+        "id_no": 1498,
+        "rev_bis": "",
+        "name_en": "Seowon, Korean Neo-Confucian Academies: Dosan-seowon",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.8434278,
+          36.72729722
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2278,
+        "id_no": 1498,
+        "rev_bis": "",
+        "name_en": "Seowon, Korean Neo-Confucian Academies: Piram-seowon",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.7517167,
+          35.3106056
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2278,
+        "id_no": 1498,
+        "rev_bis": "",
+        "name_en": "Seowon, Korean Neo-Confucian Academies: Dodong-seowon",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.3719083,
+          35.7009194
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2278,
+        "id_no": 1498,
+        "rev_bis": "",
+        "name_en": "Seowon, Korean Neo-Confucian Academies: Byeongsan-seowon",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.5530944,
+          36.5410139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2278,
+        "id_no": 1498,
+        "rev_bis": "",
+        "name_en": "Seowon, Korean Neo-Confucian Academies: Museong-seowon",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.9837306,
+          35.6018306
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2278,
+        "id_no": 1498,
+        "rev_bis": "",
+        "name_en": "Seowon, Korean Neo-Confucian Academies: Donam-seowon",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.1807639,
+          36.2092194
+        ]
+      }
+    },
+      
+       /* Getbol, Korean Tidal Flats */     
+      
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2343,
+        "id_no": 1591,
+        "rev_bis": "",
+        "name_en": "Getbol, Korean Tidal Flats: Seocheon Getbol",
+        "short_description_en": "<p>Situated in the eastern Yellow Sea on the southwestern and southern coast of the Republic of Korea, the site comprises four component parts: Seocheon Getbol, Gochang Getbol, Shinan Getbol and Boseong-Suncheon Getbol. The site exhibits a complex combination of geological, oceanographic and climatologic conditions that have led to the development of coastal diverse sedimentary systems. Each component represents one of four tidal flat subtypes (estuarine type, open embayed type, archipelago type and semi-enclosed type). The site hosts high levels of biodiversity, with reports of 2,150 species of flora and fauna, including 22 globally threatened or near-threatened species. It is home to 47 endemic and five endangered marine invertebrate species besides a total of 118 migratory bird species for which the site provides critical habitats. Endemic fauna includes Mud Octopuses (Octopus minor), and deposit feeders like Japanese Mud Crabs (Macrophthalmus japonica), Fiddler Crabs (Uca lactea), and Polychaetes (bristle worms), Stimpson’s Ghost Crabs (Ocypode stimpsoni), Yellow Sea Sand Snails (Umbonium thomasi), , as well as various suspension feeders like clams. The site demonstrates the link between geodiversity and biodiversity, and demonstrates the dependence of cultural diversity and human activity on the natural environment.</p>",
+        "justification_en": "",
+        "date_inscribed": 2021,
+        "area_hectares": 128411,
+        "criteria_txt": "(x)",
+        "category": "Natural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.6138028,
+          36.0452750
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2343,
+        "id_no": 1591,
+        "rev_bis": "",
+        "name_en": "Getbol, Korean Tidal Flats: Gochang Getbol",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.5499306,
+          35.5490389
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2343,
+        "id_no": 1591,
+        "rev_bis": "",
+        "name_en": "Getbol, Korean Tidal Flats: Shinan Getbol",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          126.1044417,
+          34.8288222
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2343,
+        "id_no": 1591,
+        "rev_bis": "",
+        "name_en": "Getbol, Korean Tidal Flats: Boseong-Suncheon Getbol",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.4589417,
+          34.8197917
+        ]
+      }
+    },
+      
+       /* Gaya Tumuli */     
+      
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2432,
+        "id_no": 1666,
+        "rev_bis": "",
+        "name_en": "Gaya Tumuli: Daeseong-dong Tumuli",
+        "short_description_en": "This serial property includes archaeological cemetery sites with burial mounds attributed to the Gaya Confederacy, which developed in the southern part of the Korean Peninsula from the 1st to the 6th century CE. Through their geographical distribution and landscape characteristics, types of burials, and grave goods, the cemeteries attest to the distinctive Gaya political system in which polities existed as autonomous political equals while sharing cultural commonalities. The introduction of new forms of tombs and the intensification of the spatial hierarchy in the tumuli sites reflect the structural changes experienced by Gaya society during its history.",
+        "justification_en": "",
+        "date_inscribed": 2023,
+        "area_hectares": 189,
+        "criteria_txt": "(iii)",
+        "category": "Cultural",
+        "transboundary": 0
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.8737250,
+          35.2372639
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2432,
+        "id_no": 1666,
+        "rev_bis": "",
+        "name_en": "Gaya Tumuli: Marisan Tumuli",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.4073944,
+          35.2683444
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2432,
+        "id_no": 1666,
+        "rev_bis": "",
+        "name_en": "Gaya Tumuli: Okjeon Tumuli",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.2800306,
+          35.5828944
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2432,
+        "id_no": 1666,
+        "rev_bis": "",
+        "name_en": "Gaya Tumuli: Jisan-dong Tumuli",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.2556722,
+          35.7218639
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2432,
+        "id_no": 1666,
+        "rev_bis": "",
+        "name_en": "Gaya Tumuli: Songhak-dong Tumuli",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.3213111,
+          34.9803778
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2432,
+        "id_no": 1666,
+        "rev_bis": "",
+        "name_en": "Gaya Tumuli: Yugok-ri and Durak-ri Tumuli",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.6215111,
+          35.5081750
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "unique_number": 2432,
+        "id_no": 1666,
+        "rev_bis": "",
+        "name_en": "Gaya Tumuli: Gyo-dong and Songhyeon-dong Tumuli",
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.5047833,
+          35.5463556
+        ]
+      }
+    }
+  ]
+}
+           
+        
+        // Add popups and markers to the map
+        
+         var popup0_content = '<h3>Seokguram Grotto</h3>';
+         popup0_content += '<img class="popupImage" alt="Photo of the Bhudda inside the Seokguram Grotto" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Front_view_of_Seokguram_from_front_chamber.jpg/300px-Front_view_of_Seokguram_from_front_chamber.jpg?20210623141301"><br><br>'
+         popup0_content += 'Listed under: Seokguram Grotto and Bulguksa Temple<br>'; 
+         popup0_content += 'Date of Inscription: 1995<br>';
+         popup0_content += 'Location: Gyeongju, North Gyeongsang<br><br>';
+         popup0_content += 'Seokguram is an artificial grotto constructed of granite that comprises an antechamber, a corridor and a main rotunda. It enshrines a monumental statue of the Sakyamuni Buddha looking out to sea with his left hand in dhyana mudra, the mudra of concentration, and his right hand in bhumisparsa mudra, the earth-touching mudra position. Together with the portrayals of devas, bodhisattvas and disciples, sculpted in high and low relief on the surrounding walls, the statues are considered to be a masterpiece of East Asian Buddhist art. The domed ceiling of the rotunda and the entrance corridor employed an innovative construction technique that involved the use of more than 360 stone slabs.<br><br>';
+         popup0_content += 'Source: <a href="https://www.heritage.go.kr/heri/cul/culSelectDetail.do?ccbaCpno=1113700240000&pageNo=1_1_1_1">국가유산청</a>, <a href="https://whc.unesco.org/en/list/736/">UNESCO</a>';
+       
+        var popup0 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup0_content);      
+
+        var marker0 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[0].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup0) //add the popup to the marker           
+            .addTo(map);
+        
+         var popup1_content = '<h3>Bulguksa Temple</h3>';
+         popup1_content += '<img class="popupImage" alt="Photo of Bulguksa Temple" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Lotus_Flower_Bridge_and_Seven_Treasure_Bridge_at_Bulguksa_in_Gyeongju%2C_Korea.jpg/300px-Lotus_Flower_Bridge_and_Seven_Treasure_Bridge_at_Bulguksa_in_Gyeongju%2C_Korea.jpg?20130217152345"><br><br>'
+         popup1_content += 'Listed under: Seokguram Grotto and Bulguksa Temple<br>'; 
+         popup1_content += 'Date of Inscription: 1995<br>';
+         popup1_content += 'Location: Gyeongju, North Gyeongsang<br><br>';
+         popup1_content += 'Bulguksa is a Buddhist temple complex that comprises a series of wooden buildings on raised stone terraces. The grounds of Bulguksa are divided into three areas – Birojeon (the Vairocana Buddha Hall), Daeungjeon (the Hall of Great Enlightenment) and Geungnakjeon (the Hall of Supreme Bliss). These areas and the stone terraces were designed to represent the land of Buddha. The stone terraces, bridges and the two pagodas – Seokgatap (Pagoda of Sakyamuni) and Dabotap (Pagoda of Bountiful Treasures) – facing the Daeungjeon attest to the fine masonry work of the Silla.<br><br>';
+         popup1_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Lotus_Flower_Bridge_and_Seven_Treasure_Bridge_at_Bulguksa_in_Gyeongju,_Korea.jpg#:~:text=Source-,Korea%20Copyright%20Commission,-Author">Korea Copyright Commission</a>, <a href="https://whc.unesco.org/en/list/736/">UNESCO</a>';
+       
+        var popup1 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup1_content);
+
+        var marker1 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[1].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup1) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup2_content = '<h3>Haeinsa Temple Janggyeong Panjeon</h3>';
+         popup2_content += '<img class="popupImage" alt="Photo of the Tripitaka Koreana Woodblocks at Haeinsa Temple" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Tripitaka_Koreana_02.jpg/300px-Tripitaka_Koreana_02.jpg?20240206174046"><br><br>'
+         popup2_content += 'Listed under: Haeinsa Temple Janggyeong Panjeon, the Depositories for the Tripitaka Koreana Woodblocks<br>'; 
+         popup2_content += 'Date of Inscription: 1995<br>';
+         popup2_content += 'Location: Hapcheon County, South Gyeongsang<br><br>';
+         popup2_content += 'Tripitaka Koreana is a collection of over 80000 wooden printing blocks, engraved in the 13th century. They represent the most complete collection of Buddhist texts, laws, and treaties. The Haeinsa Temple was built in the 15th century with the purpose of storing the woodblocks, with innovative approaches to ensure the conservation. The temple is also an important Buddhist pilgrimage site.<br><br>';
+         popup2_content += 'Source: Lauren Heckler - <a href="https://www.flickr.com/photos/malpuella/2583843433/">Fickr</a>, <a href="https://whc.unesco.org/en/list/737/">UNESCO</a>';
+       
+        var popup2 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup2_content);
+
+        var marker2 = new mapboxgl.Marker({color:'Blue'})
+            .setLngLat(WHC_sites.features[2].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup2) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup3_content = '<h3>Jongmyo Shrine</h3>';
+         popup3_content += '<img class="popupImage" alt="Photo of Jongmyo Shrine" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Jongmyo-Jeongjeon.jpg/300px-Jongmyo-Jeongjeon.jpg?20100217135533"><br><br>'
+         popup3_content += 'Listed under: Jongmyo Shrine<br>';   
+         popup3_content += 'Date of Inscription: 1995<br>';
+         popup3_content += 'Location: Seoul<br><br>';
+         popup3_content += 'Jongmyo Shrine is a Confucian royal shrine that houses the spirit tablets of the kings and queens of the Joseon Dynasty. Originally constructed in the 14th century and destroyed during the Japanese invasion in the 16th century, it was rebuilt in the early 17th century and has remained relatively intact since. Jongmyo jerye, ancestor worship rituals, are still held at the shrine.<br><br>';
+         popup3_content += 'Source: João Trindade - <a href="https://www.flickr.com/photos/11091003@N02/4359327614">Fickr</a>, <a href="https://whc.unesco.org/en/list/738/">UNESCO</a>';
+       
+        var popup3 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup3_content);
+
+        var marker3 = new mapboxgl.Marker({color:'Blue'})
+            .setLngLat(WHC_sites.features[3].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup3) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup4_content = '<h3>Changdeokgung Palace</h3>';
+         popup4_content += '<img class="popupImage" alt="Photo of Injeongjeon in Changdeokgung Palace" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Changdeokgung_Seoul_3.jpg/300px-Changdeokgung_Seoul_3.jpg?20230202154716"><br><br>'
+         popup4_content += 'Listed under: Changdeokgung Palace Complex<br>';   
+         popup4_content += 'Date of Inscription: 1997<br>';
+         popup4_content += 'Location: Seoul<br><br>';
+         popup4_content += 'The palace was built in the 15th century during the Joseon Dynasty. It was burned down during the Japanese invasion in the 16th century, but reconstructed soon afterwards and served as the main residence of the kings for the next 250 years. The layout of the palace and the surroundings follows the Confucian principles with gates, courts, and residential areas. The palace had an important influence on Korean architecture and garden design.<br><br>';
+         popup4_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Changdeokgung_Seoul_3.jpg">kallerna</a>, <a href="https://whc.unesco.org/en/list/816/">UNESCO</a>';
+       
+        var popup4 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup4_content);
+
+        var marker4 = new mapboxgl.Marker({color:'Blue'})
+            .setLngLat(WHC_sites.features[4].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup4) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup5_content = '<h3>Hwaseong Fortress</h3>';
+         popup5_content += '<img class="popupImage" alt="A view of the west gate of Hwaseong Fortress and its accompanying watch tower" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Bifyu_8.jpg/300px-Bifyu_8.jpg?20211213023618"><br><br>'
+         popup5_content += 'Listed under: Hwaseong Fortress<br>';   
+         popup5_content += 'Date of Inscription: 1997<br>';
+         popup5_content += 'Location: Suwon, Gyeonggi<br><br>';
+         popup5_content += 'The palace was built in the 15th century during the Joseon Dynasty. It was burned down during the Japanese invasion in the 16th century, but reconstructed soon afterwards and served as the main residence of the kings for the next 250 years. The layout of the palace and the surroundings follows the Confucian principles with gates, courts, and residential areas. The palace had an important influence on Korean architecture and garden design.<br><br>';
+         popup5_content += 'Source: bifyu - <a href="https://www.flickr.com/photos/bifyu/118600895/in/set-72057594091674516/">Fickr</a>, <a href="https://whc.unesco.org/en/list/817/">UNESCO</a>';
+       
+        var popup5 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup5_content);
+
+        var marker5 = new mapboxgl.Marker({color:'Blue'})
+            .setLngLat(WHC_sites.features[5].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup5) //add the popup to the marker 
+            .addTo(map);
+        
+       /* Gyeongju Historic Areas */ 
+        
+         var popup6_content = '<h3>Gyeongju Historic Areas: Mt. Namsan Belt</h3>';
+         popup6_content += '<img class="popupImage" alt="A photo of Chilbulam in Mt. Namsan" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Korea-Gyeongju-Namsan-Chilbulam-01.jpg/300px-Korea-Gyeongju-Namsan-Chilbulam-01.jpg?20071224120042"><br><br>'
+         popup6_content += 'Listed under: Gyeongju Historic Areas<br>';   
+         popup6_content += 'Date of Inscription: 2000<br>';
+         popup6_content += 'Location: Gyeongju, North Gyeongsang<br><br>';
+         popup6_content += 'The Mount Namsan Belt lies to the north of the city and covers 2,650 ha. The Buddhist monuments that have been excavated at the time of inscription include the ruins of 122 temples, 53 stone statues, 64 pagodas and 16 stone lanterns. Excavations have also revealed the remains of the pre-Buddhist natural and animistic cults of the region. 36 individual monuments, including rock-cut reliefs or engravings, stone images and heads, pagodas, royal tombs and tomb groups, wells, a group of stone banner poles, the Namsan Mountain Fortress, the Poseokjeong Pavilion site and the Seochulji Pond, exist within this area.<br><br>';
+        
+         popup6_content += 'Source: rshe002 - <a href="https://www.flickr.com/photos/93358305@N00/347340730/">Fickr</a>, <a href="https://whc.unesco.org/en/list/976/">UNESCO</a>';
+       
+        var popup6 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup6_content);
+
+        var marker6 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[6].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup6) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup7_content = '<h3>Gyeongju Historic Areas: The Wolseong Belt</h3>';
+         popup7_content += '<img class="popupImage" alt="A photo of Anapji Pond situated at the northeast edge of the Banwolseong palace site" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Anapji_Pond-Gyeongju-Korea-2006-09.jpg/300px-Anapji_Pond-Gyeongju-Korea-2006-09.jpg?20091013164327"><br><br>'
+         popup7_content += 'Listed under: Gyeongju Historic Areas<br>';  
+         popup7_content += 'Date of Inscription: 2000<br>';
+         popup7_content += 'Location: Gyeongju, North Gyeongsang<br><br>';
+         popup7_content += 'The Wolseong Belt includes the ruined palace site of Wolseong, the Gyerim woodland which legend identifies as the birthplace of the founder of the Gyeongju Kim clan, Anapji Pond, on the site of the ruined Imhaejeon Palace, and the Cheomseongdae Observatory.<br><br>';
+         popup7_content += 'Source: riNux - <a href="https://www.flickr.com/photos/89534781@N00/250631100/">Fickr</a>, <a href="https://whc.unesco.org/en/list/976/">UNESCO</a>';
+       
+        var popup7 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup7_content);
+
+        var marker7 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[7].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup7) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup8_content = '<h3>Gyeongju Historic Areas: The Tumuli Belt</h3>';
+         popup8_content += '<img class="popupImage" alt="A photo of the entrance of Cheonmachong tomb" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Korea-Gyeongju-Cheonmachong-Entrance-01.jpg/300px-Korea-Gyeongju-Cheonmachong-Entrance-01.jpg?20090823185250"><br><br>'
+         popup8_content += 'Listed under: Gyeongju Historic Areas<br>';  
+         popup8_content += 'Date of Inscription: 2000<br>';
+         popup8_content += 'Location: Gyeongju, North Gyeongsang<br><br>';
+         popup8_content += 'The Tumuli Park Belt consists of three groups of Royal Tombs. Most of the mounds are domed, but some take the form of a half-moon or a gourd. They contain double wood coffins covered with gravel, and excavations have revealed rich grave goods of gold, glass, and fine ceramics. One of the earlier tombs yielded a mural painting of a winged horse on birch bark.<br><br>';
+         popup8_content += 'Source: Julien Ambrosiano - <a href="https://www.flickr.com/photos/ambrosiano_julien/1373653512/">Fickr</a>, <a href="https://whc.unesco.org/en/list/976/">UNESCO</a>';
+       
+        var popup8 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup8_content);
+
+        var marker8 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[8].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup8) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup9_content = '<h3>Gyeongju Historic Areas: The Hwangnyongsa Belt</h3>';
+         popup9_content += '<img class="popupImage" alt="A photo of the pagoda in Bunhwangsa" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Bunhwangsa_01.JPG/300px-Bunhwangsa_01.JPG?20151111111810"><br><br>'
+         popup9_content += 'Listed under: Gyeongju Historic Areas<br>';  
+         popup9_content += 'Date of Inscription: 2000<br>';
+         popup9_content += 'Location: Gyeongju, North Gyeongsang<br><br>';
+         popup9_content += 'Hwangnyongsa Belt consists of two Buddhist temples, Bunhwangsa Temple and the ruins of Hwangnyongsa Temple. Hwangnyongsa, built to the order of King Jinheung (540 – 576 CE) was the largest temple ever built in Korea, covering some 72,500 m2. An 80 m high, nine-storey pagoda was added in 645 CE. The pagoda in Bunhwangsa was built in 634 CE, using dressed block stones.<br><br>';
+         popup9_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Bunhwangsa_01.JPG">hyolee2</a>, <a href="https://whc.unesco.org/en/list/976/">UNESCO</a>';
+       
+        var popup9 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup9_content);
+
+        var marker9 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[9].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup9) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup10_content = '<h3>Gyeongju Historic Areas: The Sanseong Belt</h3>';
+         popup10_content += '<img class="popupImage" alt="A photo of the ruins of Myeonghwalseong Fortress" src="file:///R:/GEOG490_590_31955_Spring2024/Student_Data/ikim3/FinalProject/rsz_12020052015292900.jpg"><br><br>'
+         popup10_content += 'Listed under: Gyeongju Historic Areas<br>';  
+         popup10_content += 'Date of Inscription: 2000<br>';
+         popup10_content += 'Location: Gyeongju, North Gyeongsang<br><br>';
+         popup10_content += 'The Sanseong Fortress Belt consists of defensive facilities along the east coast and at other strategic points and includes the Myeonghwal Mountain Fortress.<br><br>';
+         popup10_content += 'Source: <a href="https://english.cha.go.kr/chaen/search/selectGeneralSearchDetail.do?mn=EN_02_02&sCcebKdcd=13&ccebAsno=00470000&sCcebCtcd=37&pageIndex=4&region=&canAsset=&ccebPcd1=&searchWrd=&startNum=&endNum=&stCcebAsdt=&enCcebAsdt=&canceled=&ccebKdcd=13&ccebCtcd=">국가유산청</a>, <a href="https://whc.unesco.org/en/list/976/">UNESCO</a>';
+       
+        var popup10 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup10_content);
+
+        var marker10 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[10].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup10) //add the popup to the marker 
+            .addTo(map);
+        
+       /* Dolmen Sites */ 
+        
+         var popup11_content = '<h3>Gochang Dolmen Sites</h3>';
+         popup11_content += '<img class="popupImage" alt="A photo of a Dolmen at Gochang" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Gochang_Dolmen_Sites_-_3.JPG/300px-Gochang_Dolmen_Sites_-_3.JPG?20061016123954"><br><br>'
+         popup11_content += 'Listed under: Gochang, Hwasun and Ganghwa Dolmen Sites<br>';  
+         popup11_content += 'Date of Inscription: 2000<br>';
+         popup11_content += 'Location: Gochang County, North Jeolla<br><br>';
+         popup11_content += 'This site comprises three assemblies of dolmens, megalithic funerary monuments of the Neolithic and Bronze Age cultures. Korea is home to the largest number of dolmens in the world. Different types of dolmens provide information about culture and rituals of the societies that built them. A dolmen from Gochang is pictured above.<br><br>';
+         popup11_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Gochang_Dolmen_Sites_-_3.JPG">Kussy</a>, <a href="https://whc.unesco.org/en/list/977/">UNESCO</a>';
+       
+        var popup11 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup11_content);
+
+        var marker11 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[11].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup11) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup12_content = '<h3>Hwasun Dolmen Sites</h3>';
+         popup12_content += '<img class="popupImage" alt="A photo of a Dolmen at Hwasun" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Korea-Hwasun_Dolmen_sites01.jpg/300px-Korea-Hwasun_Dolmen_sites01.jpg?20150819143233"><br><br>'
+         popup12_content += 'Listed under: Gochang, Hwasun and Ganghwa Dolmen Sites<br>';  
+         popup12_content += 'Date of Inscription: 2000<br>';
+         popup12_content += 'Location: Hwasun County, South Jeolla<br><br>';
+         popup12_content += 'This site comprises three assemblies of dolmens, megalithic funerary monuments of the Neolithic and Bronze Age cultures. Korea is home to the largest number of dolmens in the world. Different types of dolmens provide information about culture and rituals of the societies that built them. A dolmen from Hwasun is pictured above.<br><br>';
+         popup12_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Korea-Hwasun_Dolmen_sites01.jpg">Mar del Este</a>, <a href="https://whc.unesco.org/en/list/977/">UNESCO</a>';
+       
+        var popup12 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup12_content);
+
+        var marker12 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[12].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup12) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup13_content = '<h3>Ganghwa Dolmen Sites</h3>';
+         popup13_content += '<img class="popupImage" alt="A photo a Dolmen at Ganghwa Island" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Dolmen_at_Ganghwa_Island.jpg/300px-Dolmen_at_Ganghwa_Island.jpg?20190802013909"><br><br>'
+         popup13_content += 'Listed under: Gochang, Hwasun and Ganghwa Dolmen Sites<br>';  
+         popup13_content += 'Date of Inscription: 2000<br>';
+         popup13_content += 'Location: Ganghwa County, Incheon<br><br>';
+         popup13_content += 'This site comprises three assemblies of dolmens, megalithic funerary monuments of the Neolithic and Bronze Age cultures. Korea is home to the largest number of dolmens in the world. Different types of dolmens provide information about culture and rituals of the societies that built them. A dolmen from the Ganghwa Island is pictured above.<br><br>';
+         popup13_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Dolmen_at_Ganghwa_Island.jpg">Taewangkorea</a>, <a href="https://whc.unesco.org/en/list/977/">UNESCO</a>';
+       
+        var popup13 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup13_content);
+
+        var marker13 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[13].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup13) //add the popup to the marker 
+            .addTo(map);
+        
+       /* Jeju Volcanic Island and Lava Tubes */ 
+        
+         var popup14_content = '<h3>Mt. Halla</h3>';
+         popup14_content += '<img class="popupImage" alt="A photo Halla Mountain in Jeju" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/KOCIS_Halla_Mountain_in_Jeju-do_%286387785543%29.jpg/300px-KOCIS_Halla_Mountain_in_Jeju-do_%286387785543%29.jpg?20140320224334"><br><br>'
+         popup14_content += 'Listed under: Jeju Volcanic Island and Lava Tubes<br>'; 
+         popup14_content += 'Date of Inscription: 2007<br>';
+         popup14_content += '(Minor Boundary Modification: 2018)<br>';
+         popup14_content += 'Location: Jeju City-Seogwipo, Jeju<br><br>';
+         popup14_content += 'Jeju Island is a volcanic island on the south tip of the Korean peninsula. A shield volcano, it exhibits several volcanic features, including prominent Geomunoreum lava tubes and the Seongsan Ilchulbong tuff cone. The peak, Hallasan (pictured), is the highest mountain in South Korea. It contains a lake-filled crater and waterfalls, and exhibits multi-shaped rock formations.<br><br>';
+         popup14_content += 'Source: Korea.net - <a href="https://www.flickr.com/photos/koreanet/6387785543/">Fickr</a>, <a href="https://whc.unesco.org/en/list/1264/">UNESCO</a>';
+       
+        var popup14 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup14_content);
+
+        var marker14 = new mapboxgl.Marker({className:"markerStyle2",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[14].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup14) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup15_content = '<h3>Geomunoreum Lava Tube</h3>';
+         popup15_content += '<img class="popupImage" alt="A photo inside the Geomunoreum Lava Tube system" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/KOCIS_Jeju_Island_%285983279674%29.jpg/300px-KOCIS_Jeju_Island_%285983279674%29.jpg?20140320225307"><br><br>'
+         popup15_content += 'Listed under: Jeju Volcanic Island and Lava Tubes<br>'; 
+         popup15_content += 'Date of Inscription: 2007<br>';
+         popup15_content += '(Minor Boundary Modification: 2018)<br>';
+         popup15_content += 'Location: Jeju City, Jeju<br><br>';
+         popup15_content += 'Jeju Island is a volcanic island on the south tip of the Korean peninsula. A shield volcano, it exhibits several volcanic features, including prominent Geomunoreum lava tubes (pictured) and the Seongsan Ilchulbong tuff cone. The peak, Hallasan, is the highest mountain in South Korea. It contains a lake-filled crater and waterfalls, and exhibits multi-shaped rock formations.<br><br>';
+         popup15_content += 'Source: Korea.net - <a href="https://www.flickr.com/photos/koreanet/5983279674/">Fickr</a>, <a href="https://whc.unesco.org/en/list/1264/">UNESCO</a>';
+       
+        var popup15 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup15_content);
+
+        var marker15 = new mapboxgl.Marker({className:"markerStyle2",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[15].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup15) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup16_content = '<h3>Seongsan Ilchulbong</h3>';
+         popup16_content += '<img class="popupImage" alt="A photo Seongsan Ilchulbong from the air" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Seongsan_Ilchulbong_from_the_air.jpg/300px-Seongsan_Ilchulbong_from_the_air.jpg?20220213123342"><br><br>'
+         popup16_content += 'Listed under: Jeju Volcanic Island and Lava Tubes<br>'; 
+         popup16_content += 'Date of Inscription: 2007<br>';
+         popup16_content += '(Minor Boundary Modification: 2018)<br>';
+         popup16_content += 'Location: Seogwipo, Jeju<br><br>';
+         popup16_content += 'Jeju Island is a volcanic island on the south tip of the Korean peninsula. A shield volcano, it exhibits several volcanic features, including prominent Geomunoreum lava tubes and the Seongsan Ilchulbong tuff cone (pictured). The peak, Hallasan, is the highest mountain in South Korea. It contains a lake-filled crater and waterfalls, and exhibits multi-shaped rock formations.<br><br>';
+         popup16_content += 'Source: Korea.net - <a href="https://www.flickr.com/photos/koreanet/5983298210/">Fickr</a>, <a href="https://whc.unesco.org/en/list/1264/">UNESCO</a>';
+       
+        var popup16 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup16_content);
+
+        var marker16 = new mapboxgl.Marker({className:"markerStyle2",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[16].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup16) //add the popup to the marker 
+            .addTo(map);
+        
+       /* Royal Tombs of the Joseon Dynasty */     
+        
+         var popup17_content = '<h3>Royal Tombs of the Joseon Dynasty: Donggureung Cluster</h3>';
+         popup17_content += '<img class="popupImage" alt="The grave of Taejo of Joseon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Geonwolleung.JPG/300px-Geonwolleung.JPG?20151125092119"><br><br>'
+         popup17_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup17_content += 'Date of Inscription: 2009<br>';
+         popup17_content += '(Minor Boundary Modification: 2013)<br><br>';
+         popup17_content += 'Location: Guri, Gyeonggi<br><br>';
+         popup17_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of King Taejo is pictured above.<br><br>';
+         popup17_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Geonwolleung.JPG">Kbr0706</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup17 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup17_content);
+
+        var marker17 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[17].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup17) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup18_content = '<h3>Royal Tombs of the Joseon Dynasty: Hongyureung Cluster</h3>';
+         popup18_content += '<img class="popupImage" alt="The tombs of Emperor Gojong and Emperor Sunjong" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/%ED%99%8D%EC%9C%A0%EB%A6%89_%ED%99%8D%EC%82%B4%EB%AC%B8.jpg/300px-%ED%99%8D%EC%9C%A0%EB%A6%89_%ED%99%8D%EC%82%B4%EB%AC%B8.jpg?20121020015241"><br><br>'
+         popup18_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup18_content += 'Date of Inscription: 2009<br>';
+         popup18_content += '(Minor Boundary Modification: 2013)<br>';
+         popup18_content += 'Location: Namyangju, Gyeonggi<br><br>';
+         popup18_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tombs of Emperor Gojong and Emperor Sunjong is pictured above.<br><br>';
+         popup18_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:%ED%99%8D%EC%9C%A0%EB%A6%89_%ED%99%8D%EC%82%B4%EB%AC%B8.jpg">Shrhd25</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup18 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup18_content);
+
+        var marker18 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[18].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup18) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup19_content = '<h3>Royal Tombs of the Joseon Dynasty: Sareung Cluster</h3>';
+         popup19_content += '<img class="popupImage" alt="The tomb of Queen Jeongsun" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/%EC%82%AC%EB%A6%89.JPG/300px-%EC%82%AC%EB%A6%89.JPG?20151214100756"><br><br>'
+         popup19_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup19_content += 'Date of Inscription: 2009<br>';
+         popup19_content += '(Minor Boundary Modification: 2013)<br>';
+         popup19_content += 'Location: Namyangju, Gyeonggi<br><br>';
+         popup19_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of Queen Jeongsun is pictured above.<br><br>';
+         popup19_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:%EC%82%AC%EB%A6%89.JPG">Shrhd25</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup19 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup19_content);
+
+        var marker19 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[19].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup19) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup20_content = '<h3>Royal Tombs of the Joseon Dynasty: Gwangneung Cluster</h3>';
+         popup20_content += '<img class="popupImage" alt="The tombs of King Sejo and his wife, Queen Jeonghui" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/%EA%B4%91%EB%A6%89.JPG/300px-%EA%B4%91%EB%A6%89.JPG?20151125114622"><br><br>'
+         popup20_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup20_content += 'Date of Inscription: 2009<br>';
+         popup20_content += '(Minor Boundary Modification: 2013)<br>';
+         popup20_content += 'Location: Namyangju, Gyeonggi<br><br>';
+         popup20_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tombs of King Sejo and Queen Jeonghui is pictured above.<br><br>';
+         popup20_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:%EA%B4%91%EB%A6%89.JPG">Shrhd25</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup20 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup20_content);
+
+        var marker20 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[20].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup20) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup21_content = '<h3>Royal Tombs of the Joseon Dynasty: Yeongneung Cluster</h3>';
+         popup21_content += '<img class="popupImage" alt="The tomb of King Sejong the Great" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Sejong_tomb_1.jpg/300px-Sejong_tomb_1.jpg"><br><br>'
+         popup21_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup21_content += 'Date of Inscription: 2009<br>';
+         popup21_content += '(Minor Boundary Modification: 2013)<br>';
+         popup21_content += 'Location: Yeoju, Gyeonggi<br><br>';
+         popup21_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of King Sejong the Great is pictured above.<br><br>';
+         popup21_content += 'Source: Kai Hendry - <a href="https://www.flickr.com/photos/hendry/185985727/">Fickr</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup21 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup21_content);
+
+        var marker21 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[21].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup21) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup22_content = '<h3>Royal Tombs of the Joseon Dynasty: Jangneung Cluster (Yeongwol)</h3>';
+         popup22_content += '<img class="popupImage" alt="The tomb of King Danjong" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Danjong_jangreung.jpg/300px-Danjong_jangreung.jpg?20080826081419"><br><br>'
+         popup22_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup22_content += 'Date of Inscription: 2009<br>';
+         popup22_content += '(Minor Boundary Modification: 2013)<br>';
+         popup22_content += 'Location: Yeongwol County, Gangwon<br><br>';
+         popup22_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of King Danjong is pictured above.<br><br>';
+         popup22_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Danjong_jangreung.jpg">알밤한대</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup22 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup22_content);
+
+        var marker22 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[22].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup22) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup23_content = '<h3>Royal Tombs of the Joseon Dynasty: Seolleung Cluster</h3>';
+         popup23_content += '<img class="popupImage" alt="The tombs of King Seongjong and Queen Jeonghyeon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Seolleung_2008-04-25.jpg/300px-Seolleung_2008-04-25.jpg?20230131102956"><br><br>'
+         popup23_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup23_content += 'Date of Inscription: 2009<br>';
+         popup23_content += '(Minor Boundary Modification: 2013)<br>';
+         popup23_content += 'Location: Seoul<br><br>';
+         popup23_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of King Seongjong and his third wife, Queen Jeonghyeon is pictured above.<br><br>';
+         popup23_content += 'Source: Gaël Chardon - <a href="https://www.flickr.com/photos/gael/2440937284/">Fickr</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup23 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup23_content);
+
+        var marker23 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[23].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup23) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup24_content = '<h3>Royal Tombs of the Joseon Dynasty: Heolleung Cluster</h3>';
+         popup24_content += '<img class="popupImage" alt="The tomb of King Taejong" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Heolleung.jpg/300px-Heolleung.jpg?20180413132739"><br><br>'
+         popup24_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup24_content += 'Date of Inscription: 2009<br>';
+         popup24_content += '(Minor Boundary Modification: 2013)<br>';
+         popup24_content += 'Location: Seoul<br><br>';
+         popup24_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of King Taejong is pictured above.<br><br>';
+         popup24_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Heolleung.jpg">Tombus20032000</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup24 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup24_content);
+
+        var marker24 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[24].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup24) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup25_content = '<h3>Royal Tombs of the Joseon Dynasty: Taereung Cluster</h3>';
+         popup25_content += '<img class="popupImage" alt="The tomb of Queen Munjeong" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/%ED%83%9C%EA%B0%95%EB%A6%89.jpg/300px-%ED%83%9C%EA%B0%95%EB%A6%89.jpg?20170914152419"><br><br>'
+         popup25_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup25_content += 'Date of Inscription: 2009<br>';
+         popup25_content += '(Minor Boundary Modification: 2013)<br>';
+         popup25_content += 'Location: Seoul<br><br>';
+         popup25_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of Queen Munjeong is pictured above.<br><br>';
+         popup25_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:%ED%83%9C%EA%B0%95%EB%A6%89.jpg">van_sinsy</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup25 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup25_content);
+
+        var marker25 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[25].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup25) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup26_content = '<h3>Royal Tombs of the Joseon Dynasty: Jeongneung Cluster</h3>';
+         popup26_content += '<img class="popupImage" alt="The tomb of Queen Sindeok" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Jeongneung_Jeongjagak.jpg/300px-Jeongneung_Jeongjagak.jpg?20140927084113"><br><br>'
+         popup26_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>';  
+         popup26_content += 'Date of Inscription: 2009<br>';
+         popup26_content += '(Minor Boundary Modification: 2013)<br>';
+         popup26_content += 'Location: Seoul<br><br>';
+         popup26_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of Queen Sindeok is pictured.<br><br>';
+         popup26_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Jeongneung_Jeongjagak.jpg">EO, TAE-SU</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup26 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup26_content);
+
+        var marker26 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[26].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup26) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup27_content = '<h3>Royal Tombs of the Joseon Dynasty: Uireung Cluster</h3>';
+         popup27_content += '<img class="popupImage" alt="The tomb of Gyeongjong of Joseon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Uireung%2C2018.jpg/300px-Uireung%2C2018.jpg?20180413140137"><br><br>'
+         popup27_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup27_content += 'Date of Inscription: 2009<br>';
+         popup27_content += '(Minor Boundary Modification: 2013)<br>';
+         popup27_content += 'Location: Seoul<br><br>';
+         popup27_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of Gyeongjong of Joseon is pictured above.<br><br>';
+         popup27_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Uireung,2018.jpg">Tombus20032000</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup27 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup27_content);
+
+        var marker27 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[27].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup27) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup28_content = '<h3>Royal Tombs of the Joseon Dynasty: Seooreung Cluster</h3>';
+         popup28_content += '<img class="popupImage" alt="The tomb of Crown Prince Uigyeong" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Uireung%2C2018.jpg/300px-Uireung%2C2018.jpg?20180413140137"><br><br>'
+         popup28_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup28_content += 'Date of Inscription: 2009<br>';
+         popup28_content += '(Minor Boundary Modification: 2013)<br>';
+         popup28_content += 'Location: Goyang, Gyeonggi<br><br>';
+         popup28_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of Crown Prince Uigyeong is pictured above.<br><br>';
+         popup28_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Seooreung_7.JPG">hyolee2</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup28 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup28_content);
+
+        var marker28 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[28].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup28) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup29_content = '<h3>Royal Tombs of the Joseon Dynasty: Seosamneung Cluster</h3>';
+         popup29_content += '<img class="popupImage" alt="The tombs of Queen Janggyeong, King Injong and King Cheoljong" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Korea-Goyang-Seosamneung_Tomb-01.jpg/300px-Korea-Goyang-Seosamneung_Tomb-01.jpg?20090814231928"><br><br>'
+         popup29_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup29_content += 'Date of Inscription: 2009<br>';
+         popup29_content += '(Minor Boundary Modification: 2013)<br>';
+         popup29_content += 'Location: Goyang, Gyeonggi<br><br>';
+         popup29_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tombs of Queen Janggyeong, King Injong and King Cheoljong are pictured above.<br><br>';
+         popup29_content += 'Source: Brandon Butler - <a href="https://www.flickr.com/photos/kayakorea/3816496683/">Fickr</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup29 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup29_content);
+
+        var marker29 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[29].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup29) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup30_content = '<h3>Royal Tombs of the Joseon Dynasty: Olleung Cluster</h3>';
+         popup30_content += '<img class="popupImage" alt="The tomb of Queen Dangyeong" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/%EC%96%91%EC%A3%BC_%EC%98%A8%EB%A6%89_01.jpg/300px-%EC%96%91%EC%A3%BC_%EC%98%A8%EB%A6%89_01.jpg?20191117212852"><br><br>'
+         popup30_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup30_content += 'Date of Inscription: 2009<br>';
+         popup30_content += '(Minor Boundary Modification: 2013)<br>';
+         popup30_content += 'Location: Yangju, Gyeonggi<br><br>';
+         popup30_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tomb of Queen Dangyeong is pictured above.<br><br>';
+         popup30_content += 'Source: <a href="http://www.heritage.go.kr/heri/cul/imgHeritage.do?ccimId=1625745&ccbaKdcd=13&ccbaAsno=02100000&ccbaCtcd=31#">국가유산청</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup30 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup30_content);
+
+        var marker30 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[30].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup30) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup31_content = '<h3>Royal Tombs of the Joseon Dynasty: Paju Samneung Cluster</h3>';
+         popup31_content += '<img class="popupImage" alt="The tombs of Queen Jangsun, Queen Gonghye and Crown Prince Hyojang" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/%ED%8C%8C%EC%A3%BC_%EC%82%BC%EB%A6%89_-_%EA%B3%B5%EB%A6%89_%EC%A0%84%EA%B2%BD.jpg/300px-%ED%8C%8C%EC%A3%BC_%EC%82%BC%EB%A6%89_-_%EA%B3%B5%EB%A6%89_%EC%A0%84%EA%B2%BD.jpg?20191209024357"><br><br>'
+         popup31_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup31_content += 'Date of Inscription: 2009<br>';
+         popup31_content += '(Minor Boundary Modification: 2013)<br>';
+         popup31_content += 'Location: Paju, Gyeonggi<br><br>';
+         popup31_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tombs of Queen Jangsun, Queen Gonghye and Crown Prince Hyojang are pictured above.<br><br>';
+         popup31_content += 'Source: <a href="http://www.heritage.go.kr/heri/cul/imgHeritage.do?ccimId=1625655&ccbaKdcd=13&ccbaAsno=02050000&ccbaCtcd=31">국가유산청</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup31 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup31_content);
+
+        var marker31 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[31].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup31) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup32_content = '<h3>Royal Tombs of the Joseon Dynasty: Jangneung Cluster (Paju)</h3>';
+         popup32_content += '<img class="popupImage" alt="The tombs of King Injo and Queen Inyeol" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/%ED%8C%8C%EC%A3%BC_%EC%9E%A5%EB%A6%89_%EB%8A%A5%EC%B9%A8.jpg/300px-%ED%8C%8C%EC%A3%BC_%EC%9E%A5%EB%A6%89_%EB%8A%A5%EC%B9%A8.jpg?20210805083755"><br><br>'
+         popup32_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup32_content += 'Date of Inscription: 2009<br>';
+         popup32_content += '(Minor Boundary Modification: 2013)<br>';
+         popup32_content += 'Location: Seoul<br><br>';
+         popup32_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tombs of King Injo and his first wife, Queen Inyeol are pictured above.<br><br>';
+         popup32_content += 'Source: <a href="https://www.heritage.go.kr/heri/cul/culSelectDetail.do?s_kdcd=&s_ctcd=&ccbaKdcd=13&ccbaAsno=02030000&ccbaCtcd=31&ccbaCpno=1333102030000&ccbaCncl=1&region=&searchCondition=&searchCondition2=&ccbaCndt=&stCcbaAsno=&endCcbaAsno=&stCcbaAsdt=&endCcbaAsdt=&ccbaPcd1=&ccbaLcto=&ccbaGcode=&ccbaBcode=&ccbaMcode=&culPageNo=1&returnUrl=&pageNo=1_1_1_1&sngl=Y">국가유산청</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup32 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup32_content);
+        
+        var marker32 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[32].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup32) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup33_content = '<h3>Royal Tombs of the Joseon Dynasty: Jangneung Cluster (Gimpo)</h3>';
+         popup33_content += '<img class="popupImage" alt="The tombs of Prince Jeongwon and Queen Inheon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/%EA%B9%80%ED%8F%AC_%EC%9E%A5%EB%A6%89.jpg/300px-%EA%B9%80%ED%8F%AC_%EC%9E%A5%EB%A6%89.jpg?20211230073951"><br><br>'
+         popup33_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup33_content += 'Date of Inscription: 2009<br>';
+         popup33_content += '(Minor Boundary Modification: 2013)<br>';
+         popup33_content += 'Location: Gimpo, Gyeonggi<br><br>';
+         popup33_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tombs of Prince Jeongwon (who was posthumously honored as King Wonjong) and Queen Inheon are pictured above.<br><br>';
+         popup33_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:%EA%B9%80%ED%8F%AC_%EC%9E%A5%EB%A6%89.jpg">Ggangsi</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup33 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup33_content);
+
+        var marker33 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[33].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup33) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup34_content = '<h3>Royal Tombs of the Joseon Dynasty: Yungneung Cluster</h3>';
+         popup34_content += '<img class="popupImage" alt="The tombs of Crown Prince Sado and Lady Hyegyeong" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/%EC%9C%B5%EB%A6%89_%ED%99%8D%EC%82%B4%EB%AC%B8.jpg/300px-%EC%9C%B5%EB%A6%89_%ED%99%8D%EC%82%B4%EB%AC%B8.jpg?20170928151850"><br><br>'
+         popup34_content += 'Listed under: Royal Tombs of the Joseon Dynasty<br>'; 
+         popup34_content += 'Date of Inscription: 2009<br>';
+         popup34_content += '(Minor Boundary Modification: 2013)<br>';
+         popup34_content += 'Location: Hwaseong, Gyeonggi<br><br>';
+         popup34_content += 'The tombs of the kings of the Joseon Dynasty date between 1408 and 1966. The site comprises 40 tombs at 18 locations. The layout of the tombs follows the Confucian principles and they are well integrated into the surrounding landscape. Ancestor worship rituals were held regularly during the Joseon period and the rituals are still annually carried out today by the Royal Family Organization and the worshiping society for each royal tomb. The tombs of Crown Prince Sado and Lady Hyegyeong (posthumously honored as King Jangjo and Queen Heongyeong) are pictured above.<br><br>';
+         popup34_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:%EC%9C%B5%EB%A6%89_%ED%99%8D%EC%82%B4%EB%AC%B8.jpg">Story-grapher(sang hun kim)</a>, <a href="https://whc.unesco.org/en/list/1319/">UNESCO</a>';
+       
+        var popup34 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup34_content);
+
+        var marker34 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[34].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup34) //add the popup to the marker 
+            .addTo(map);
+        
+       /* Historic Villages of Korea: Hahoe and Yangdong */ 
+        
+         var popup35_content = '<h3>Hahoe Folk Village</h3>';
+         popup35_content += '<img class="popupImage" alt="A photo of Hahoe Folk Village" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Hahoe_8784.jpg/300px-Hahoe_8784.jpg?20121111200619"><br><br>'
+         popup35_content += 'Listed under: Historic Villages of Korea: Hahoe and Yangdong<br>';
+         popup35_content += 'Date of Inscription: 2010<br>';
+         popup35_content += 'Location: Andong, North Gyeongsang<br><br>';
+         popup35_content += 'The villages of Hahoe and Yangdong are two representative clan villages of Korea. They were founded in the 14th and 15th centuries, during the early Joseon period. They contain houses of lead families (yangban), thatched-roof houses for commoners, pavilions, study halls, and Confucian academies for learning. The setting of the villages in the mountain area inspired poets of the 17th and 18th centuries.<br><br>';
+         popup35_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Hahoe_8784.jpg">Idobi</a>, <a href="https://whc.unesco.org/en/list/1324/">UNESCO</a>';
+       
+        var popup35 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup35_content);
+
+        var marker35 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[35].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup35) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup36_content = '<h3>Yangdong Folk Village</h3>';
+         popup36_content += '<img class="popupImage" alt="A photo of Hahoe Folk Village" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Yangdong_Village_02.jpg/300px-Yangdong_Village_02.jpg?20240204202714"><br><br>'
+         popup36_content += 'Listed under: Historic Villages of Korea: Hahoe and Yangdong<br>';
+         popup36_content += 'Date of Inscription: 2010<br>';
+         popup36_content += 'Location: Gyeongju, North Gyeongsang<br><br>';
+         popup36_content += 'The villages of Hahoe and Yangdong are two representative clan villages of Korea. They were founded in the 14th and 15th centuries, during the early Joseon period. They contain houses of lead families (yangban), thatched-roof houses for commoners, pavilions, study halls, and Confucian academies for learning. The setting of the villages in the mountain area inspired poets of the 17th and 18th centuries.<br><br>';
+         popup36_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Yangdong_Village_02.jpg">Bernard Gagnon</a>, <a href="https://whc.unesco.org/en/list/1324/">UNESCO</a>';
+       
+        var popup36 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup36_content);
+
+        var marker36 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[36].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup36) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup37_content = '<h3>Namhansanseong</h3>';
+         popup37_content += '<img class="popupImage" alt="A photo of Namhansanseong" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Khitai5.jpg/300px-Khitai5.jpg?20060921052748"><br><br>'
+         popup37_content += 'Listed under: Namhansanseong<br>'; 
+         popup37_content += 'Date of Inscription: 2010<br>';
+         popup37_content += 'Location: Gwangju, Gyeonggi<br><br>';
+         popup37_content += 'The Namhansanseong was constructed in the early 17th century, upon previous fortifications, to serve as the emergency Joseon capital. It could accommodate 4000 people and was defended by Buddhist monk-soldiers. The design of the mountain fortress drew from Chinese and Japanese influences based on defenses against the western-style firearms. It was influential in the design of other citadels in Korea.<br><br>';
+         popup37_content += 'Source: Khitai - <a href="https://www.flickr.com/photos/ysjjhfox/247928951/">Fickr</a>, <a href="https://whc.unesco.org/en/list/1439/">UNESCO</a>';
+       
+        var popup37 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup37_content);
+
+        var marker37 = new mapboxgl.Marker({color:'Blue'})
+            .setLngLat(WHC_sites.features[37].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup37) //add the popup to the marker 
+            .addTo(map);
+        
+       /* Baekje Historic Areas */    
+        
+         var popup38_content = '<h3>Gongsanseong Fortress</h3>';
+         popup38_content += '<img class="popupImage" alt="A photo of Gongsanseong Fortress" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/%EA%B3%B5%EC%82%B0%EC%84%B1_%EA%B8%88%EC%84%9C%EB%A3%A8.jpg/300px-%EA%B3%B5%EC%82%B0%EC%84%B1_%EA%B8%88%EC%84%9C%EB%A3%A8.jpg?20160929045135"><br><br>'
+         popup38_content += 'Listed under: Baekje Historic Areas<br>'; 
+         popup38_content += 'Date of Inscription: 2015<br>';
+         popup38_content += 'Location: Gongju, South Chungcheong<br><br>';
+         popup38_content += 'This site comprises eight archaeological sites dating from 475 to 660 CE, including the Gongsanseong fortress. Together, these sites represent the later period of the Baekje Kingdom, one of the three earliest kingdoms on the Korean peninsula, during which time they were at the crossroads of considerable technological, religious, cultural and artistic exchanges between the ancient East Asian kingdoms in Korea, China and Japan.<br><br>';
+         popup38_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:%EA%B3%B5%EC%82%B0%EC%84%B1_%EA%B8%88%EC%84%9C%EB%A3%A8.jpg">Jung Mookyung</a>, <a href="https://whc.unesco.org/en/list/1477/">UNESCO</a>';
+       
+        var popup38 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup38_content);
+
+        var marker38 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[38].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup38) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup39_content = '<h3>Royal Tombs in Songsan-ri</h3>';
+         popup39_content += '<img class="popupImage" alt="A photo of the Songsan-ri Tombs" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Tomb_No._1%2C2%2C3%2C4_of_Songsan-ri%2C_Gongju%2C_Korea.JPG/300px-Tomb_No._1%2C2%2C3%2C4_of_Songsan-ri%2C_Gongju%2C_Korea.JPG?20100828162220"><br><br>'
+         popup39_content += 'Listed under: Baekje Historic Areas<br>'; 
+         popup39_content += 'Date of Inscription: 2015<br>';
+         popup39_content += 'Location: Gongju, South Chungcheong<br><br>';
+         popup39_content += 'This site comprises eight archaeological sites dating from 475 to 660 CE, including the royal tombs at Songsan-ri related to the capital, Ungjin (present day Gongju). Together, these sites represent the later period of the Baekje Kingdom, one of the three earliest kingdoms on the Korean peninsula, during which time they were at the crossroads of considerable technological, religious, cultural and artistic exchanges between the ancient East Asian kingdoms in Korea, China and Japan.<br><br>';
+         popup39_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Tomb_No._1,2,3,4_of_Songsan-ri,_Gongju,_Korea.JPG">Ryuch</a>, <a href="https://whc.unesco.org/en/list/1477/">UNESCO</a>';
+       
+        var popup39 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup39_content);
+
+        var marker39 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[39].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup39) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup40_content = '<h3>Archeological Site in Gwanbuk-ri and Busosanseong Fortress</h3>';
+         popup40_content += '<img class="popupImage" alt="A photo of Busosanseong Fortress" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Busosanseong_022.jpg/300px-Busosanseong_022.jpg?20201119150355"><br><br>'
+         popup40_content += 'Listed under: Baekje Historic Areas<br>'; 
+         popup40_content += 'Date of Inscription: 2015<br>';
+         popup40_content += 'Location: Buyeo County, South Chungcheong<br><br>';
+         popup40_content += 'This site comprises eight archaeological sites dating from 475 to 660 CE, including the Busosanseong Fortress and the archaeological Site in Gwanbuk-ri. Together, these sites represent the later period of the Baekje Kingdom, one of the three earliest kingdoms on the Korean peninsula, during which time they were at the crossroads of considerable technological, religious, cultural and artistic exchanges between the ancient East Asian kingdoms in Korea, China and Japan.<br><br>';
+         popup40_content += 'Source: travel oriented - <a href="https://www.flickr.com/photos/traveloriented/9703585377/">Fickr</a>, <a href="https://whc.unesco.org/en/list/1477/">UNESCO</a>';
+       
+        var popup40 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup40_content);
+
+        var marker40 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[40].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup40) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup41_content = '<h3>Jeongnimsa Temple</h3>';
+         popup41_content += '<img class="popupImage" alt="A photo of Jeongnimsa Temple" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Jeongnimsa_Temple_02.jpg/300px-Jeongnimsa_Temple_02.jpg?20240121150901"><br><br>'
+         popup41_content += 'Listed under: Baekje Historic Areas<br>'; 
+         popup41_content += 'Date of Inscription: 2015<br>';
+         popup41_content += 'Location: Buyeo County, South Chungcheong<br><br>';
+         popup41_content += 'This site comprises eight archaeological sites dating from 475 to 660 CE, including the Jeongnimsa Temple. Together, these sites represent the later period of the Baekje Kingdom, one of the three earliest kingdoms on the Korean peninsula, during which time they were at the crossroads of considerable technological, religious, cultural and artistic exchanges between the ancient East Asian kingdoms in Korea, China and Japan.<br><br>';
+         popup41_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Jeongnimsa_Temple_02.jpg">Bernard Gagnon</a>, <a href="https://whc.unesco.org/en/list/1477/">UNESCO</a>';
+       
+        var popup41 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup41_content);
+
+        var marker41 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[41].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup41) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup42_content = '<h3>Royal Tombs in Neungsan-ri</h3>';
+         popup42_content += '<img class="popupImage" alt="A photo of the royal tombs in Neungsan-ri" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Tombs_in_Neungsan-ri%2C_Buyeo%2C_Korea.jpg/300px-Tombs_in_Neungsan-ri%2C_Buyeo%2C_Korea.jpg?20151013202145"><br><br>'
+         popup42_content += 'Listed under: Baekje Historic Areas<br>'; 
+         popup42_content += 'Date of Inscription: 2015<br>';
+         popup42_content += 'Location: Buyeo County, South Chungcheong<br><br>';
+         popup42_content += 'This site comprises eight archaeological sites dating from 475 to 660 CE, including  the royal tombs in Neungsan-ri related to the capital, Sabi (now Buyeo). Together, these sites represent the later period of the Baekje Kingdom, one of the three earliest kingdoms on the Korean peninsula, during which time they were at the crossroads of considerable technological, religious, cultural and artistic exchanges between the ancient East Asian kingdoms in Korea, China and Japan.<br><br>';
+         popup42_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Tombs_in_Neungsan-ri,_Buyeo,_Korea.jpg">Ryuch</a>, <a href="https://whc.unesco.org/en/list/1477/">UNESCO</a>';
+       
+        var popup42 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup42_content);
+
+        var marker42 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[42].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup42) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup43_content = '<h3>Naseong City Wall</h3>';
+         popup43_content += '<img class="popupImage" alt="A photo of the Naseong City Wall" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/%EB%B6%80%EC%97%AC_%EB%82%98%EC%84%B1_01.jpg/300px-%EB%B6%80%EC%97%AC_%EB%82%98%EC%84%B1_01.jpg"><br><br>'
+         popup43_content += 'Listed under: Baekje Historic Areas<br>'; 
+         popup43_content += 'Date of Inscription: 2015<br>';
+         popup43_content += 'Location: Buyeo County, South Chungcheong<br><br>';
+         popup43_content += 'This site comprises eight archaeological sites dating from 475 to 660 CE, including the Naseong city wall related to the capital, Sabi (now Buyeo). Together, these sites represent the later period of the Baekje Kingdom, one of the three earliest kingdoms on the Korean peninsula, during which time they were at the crossroads of considerable technological, religious, cultural and artistic exchanges between the ancient East Asian kingdoms in Korea, China and Japan.<br><br>';
+         popup43_content += 'Source: <a href="http://tour.buyeo.go.kr/_prog/_board/?mode=V&no=NRTb9W3AVzGUTThkrLgqmw&code=tour_hidden&site_dvs_cd=tour&menu_dvs_cd=010301&skey=&sval=&site_dvs=&GotoPage=">부여군청</a>, <a href="https://whc.unesco.org/en/list/1477/">UNESCO</a>';
+       
+        var popup43 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup43_content);
+
+        var marker43 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[43].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup43) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup44_content = '<h3>Archeological Site in Wanggung-ri</h3>';
+         popup44_content += '<img class="popupImage" alt="A photo of the Archaeological Site in Wanggung-ri" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/%EC%9D%B5%EC%82%B0_%EC%99%95%EA%B6%81%EB%A6%AC_%EC%9C%A0%EC%A0%81_01.jpg/300px-%EC%9D%B5%EC%82%B0_%EC%99%95%EA%B6%81%EB%A6%AC_%EC%9C%A0%EC%A0%81_01.jpg"><br><br>'
+         popup44_content += 'Listed under: Baekje Historic Areas<br>'; 
+         popup44_content += 'Date of Inscription: 2015<br>';
+         popup44_content += 'Location: Iksan, North Jeolla<br><br>';
+         popup44_content += 'This site comprises eight archaeological sites dating from 475 to 660 CE, including the royal palace at Wanggung-ri related to the secondary Sabi capital. Together, these sites represent the later period of the Baekje Kingdom, one of the three earliest kingdoms on the Korean peninsula, during which time they were at the crossroads of considerable technological, religious, cultural and artistic exchanges between the ancient East Asian kingdoms in Korea, China and Japan.<br><br>';
+         popup44_content += 'Source: <a href="http://www.heritage.go.kr/heri/cul/imgHeritage.do?ccimId=3166428&ccbaKdcd=13&ccbaAsno=04080000&ccbaCtcd=35#">국가유산청</a>, <a href="https://whc.unesco.org/en/list/1477/">UNESCO</a>';
+       
+        var popup44 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup44_content);
+
+        var marker44 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[44].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup44) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup45_content = '<h3>Mireuksa Temple</h3>';
+         popup45_content += '<img class="popupImage" alt="A photo of Mireuksa Temple at night" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/%EC%9D%B5%EC%82%B0_%EB%AF%B8%EB%A5%B5%EC%82%AC%EC%A7%80_%EC%84%9D%ED%83%91%282019%EB%85%84%29_%EC%95%BC%EA%B2%BD.jpg/300px-%EC%9D%B5%EC%82%B0_%EB%AF%B8%EB%A5%B5%EC%82%AC%EC%A7%80_%EC%84%9D%ED%83%91%282019%EB%85%84%29_%EC%95%BC%EA%B2%BD.jpg"><br><br>'
+         popup45_content += 'Listed under: Baekje Historic Areas<br>'; 
+         popup45_content += 'Date of Inscription: 2015<br>';
+         popup45_content += 'Location: Iksan, North Jeolla<br><br>';
+         popup45_content += 'This site comprises eight archaeological sites dating from 475 to 660 CE, including the Mireuksa Temple related to the secondary Sabi capital. Together, these sites represent the later period of the Baekje Kingdom, one of the three earliest kingdoms on the Korean peninsula, during which time they were at the crossroads of considerable technological, religious, cultural and artistic exchanges between the ancient East Asian kingdoms in Korea, China and Japan.<br><br>';
+         popup45_content += 'Source: <a href="https://www.heritage.go.kr/heri/cul/culSelectDetail.do?VdkVgwKey=11,00110000,35&pageNo=1_1_1_0">국가유산청</a>, <a href="https://whc.unesco.org/en/list/1477/">UNESCO</a>';
+       
+        var popup45 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup45_content);
+
+        var marker45 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[45].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup45) //add the popup to the marker 
+            .addTo(map);
+        
+        /* Sansa, Buddhist Mountain Monasteries in Korea */        
+        
+         var popup46_content = '<h3>Tongdosa Temple</h3>';
+         popup46_content += '<img class="popupImage" alt="A photo of the Tongdosa Temple" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/%ED%86%B5%EB%8F%84%EC%82%AC_%EB%8C%80%EC%9B%85%EC%A0%842.jpg/300px-%ED%86%B5%EB%8F%84%EC%82%AC_%EB%8C%80%EC%9B%85%EC%A0%842.jpg"><br><br>'
+         popup46_content += 'Listed under: Sansa, Buddhist Mountain Monasteries in Korea<br>'; 
+         popup46_content += 'Date of Inscription: 2018<br>';
+         popup46_content += 'Location: Yangsan, South Gyeongsang<br><br>';
+         popup46_content += 'The Sansa are Buddhist mountain monasteries located throughout the southern provinces of the Korean Peninsula. The spatial arrangement of the seven temples that comprise the property, established from the 7th to 9th centuries, present common characteristics that are specific to Korea. These mountain monasteries are sacred places, which have survived as living centres of faith and daily religious practice to the present. The Tongdosa temple is pictured above.<br><br>';
+         popup46_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:%ED%86%B5%EB%8F%84%EC%82%AC_%EB%8C%80%EC%9B%85%EC%A0%842.jpg">최옥석</a>, <a href="https://whc.unesco.org/en/list/1562/">UNESCO</a>';
+       
+        var popup46 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup46_content);
+
+        var marker46 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[46].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup46) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup47_content = '<h3>Buseoksa Temple</h3>';
+         popup47_content += '<img class="popupImage" alt="A photo of the Buseoksa Temple" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/%EB%B6%80%EC%84%9D%EC%82%AC_%EB%AC%B4%EB%9F%89%EC%88%98%EC%A0%84.jpg/300px-%EB%B6%80%EC%84%9D%EC%82%AC_%EB%AC%B4%EB%9F%89%EC%88%98%EC%A0%84.jpg"><br><br>'
+         popup47_content += 'Listed under: Sansa, Buddhist Mountain Monasteries in Korea<br>'; 
+         popup47_content += 'Date of Inscription: 2018<br>';
+         popup47_content += 'Location: Yeongju, North Gyeongsang<br><br>';
+         popup47_content += 'The Sansa are Buddhist mountain monasteries located throughout the southern provinces of the Korean Peninsula. The spatial arrangement of the seven temples that comprise the property, established from the 7th to 9th centuries, present common characteristics that are specific to Korea. These mountain monasteries are sacred places, which have survived as living centres of faith and daily religious practice to the present. The Buseoksa temple is pictured above.<br><br>';
+         popup47_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:%EB%B6%80%EC%84%9D%EC%82%AC_%EB%AC%B4%EB%9F%89%EC%88%98%EC%A0%84.jpg">최옥석</a>, <a href="https://whc.unesco.org/en/list/1562/">UNESCO</a>';
+       
+        var popup47 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup47_content);
+
+        var marker47 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[47].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup47) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup48_content = '<h3>Bongjeongsa Temple</h3>';
+         popup48_content += '<img class="popupImage" alt="A photo of the Bongjeongsa Temple" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Korea-Andong-Bongjeongsa_3040-06_Geungnakjeon.JPG/300px-Korea-Andong-Bongjeongsa_3040-06_Geungnakjeon.JPG?20110130194550"><br><br>'
+         popup48_content += 'Listed under: Sansa, Buddhist Mountain Monasteries in Korea<br>'; 
+         popup48_content += 'Date of Inscription: 2018<br>';
+         popup48_content += 'Location: Andong, North Gyeongsang<br><br>';
+         popup48_content += 'The Sansa are Buddhist mountain monasteries located throughout the southern provinces of the Korean Peninsula. The spatial arrangement of the seven temples that comprise the property, established from the 7th to 9th centuries, present common characteristics that are specific to Korea. These mountain monasteries are sacred places, which have survived as living centres of faith and daily religious practice to the present. The Bongjeongsa temple is pictured above.<br><br>';
+         popup48_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Korea-Andong-Bongjeongsa_3040-06_Geungnakjeon.JPG">Steve46814</a>, <a href="https://whc.unesco.org/en/list/1562/">UNESCO</a>';
+       
+        var popup48 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup48_content);
+
+        var marker48 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[48].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup48) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup49_content = '<h3>Beopjusa Temple</h3>';
+         popup49_content += '<img class="popupImage" alt="A photo of the Beopjusa Temple" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Korea-Boeun-Beopjusa_Palsangjeon_and_Bell_Pavilion_1765-06.JPG/300px-Korea-Boeun-Beopjusa_Palsangjeon_and_Bell_Pavilion_1765-06.JPG?20100502050820"><br><br>'
+         popup49_content += 'Listed under: Sansa, Buddhist Mountain Monasteries in Korea<br>'; 
+         popup49_content += 'Date of Inscription: 2018<br>';
+         popup49_content += 'Location: Boeun County, North Chungcheong<br><br>';
+         popup49_content += 'The Sansa are Buddhist mountain monasteries located throughout the southern provinces of the Korean Peninsula. The spatial arrangement of the seven temples that comprise the property, established from the 7th to 9th centuries, present common characteristics that are specific to Korea. These mountain monasteries are sacred places, which have survived as living centres of faith and daily religious practice to the present. The Beopjusa temple is pictured above.<br><br>';
+         popup49_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Korea-Boeun-Beopjusa_Palsangjeon_and_Bell_Pavilion_1765-06.JPG">Steve46814</a>, <a href="https://whc.unesco.org/en/list/1562/">UNESCO</a>';
+       
+        var popup49 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup49_content);
+
+        var marker49 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[49].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup49) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup50_content = '<h3>Magoksa Temple</h3>';
+         popup50_content += '<img class="popupImage" alt="A photo of the Magoksa Temple" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Magoksa.JPG/300px-Magoksa.JPG?20110305140812"><br><br>'
+         popup50_content += 'Listed under: Sansa, Buddhist Mountain Monasteries in Korea<br>'; 
+         popup50_content += 'Date of Inscription: 2018<br>';
+         popup50_content += 'Location: Gongju, South Chungcheong<br><br>';
+         popup50_content += 'The Sansa are Buddhist mountain monasteries located throughout the southern provinces of the Korean Peninsula. The spatial arrangement of the seven temples that comprise the property, established from the 7th to 9th centuries, present common characteristics that are specific to Korea. These mountain monasteries are sacred places, which have survived as living centres of faith and daily religious practice to the present. The Magoksa temple is pictured above.<br><br>';
+         popup50_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Magoksa.JPG">Jjw</a>, <a href="https://whc.unesco.org/en/list/1562/">UNESCO</a>';
+       
+        var popup50 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup50_content);
+
+        var marker50 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[50].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup50) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup51_content = '<h3>Seonamsa Temple</h3>';
+         popup51_content += '<img class="popupImage" alt="A photo of the Seonamsa Temple" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Seonamsa_Iljumun_11-06782.JPG/300px-Seonamsa_Iljumun_11-06782.JPG"><br><br>'
+         popup51_content += 'Listed under: Sansa, Buddhist Mountain Monasteries in Korea<br>'; 
+         popup51_content += 'Date of Inscription: 2018<br>';
+         popup51_content += 'Location: Suncheon, South Jeolla<br><br>';
+         popup51_content += 'The Sansa are Buddhist mountain monasteries located throughout the southern provinces of the Korean Peninsula. The spatial arrangement of the seven temples that comprise the property, established from the 7th to 9th centuries, present common characteristics that are specific to Korea. These mountain monasteries are sacred places, which have survived as living centres of faith and daily religious practice to the present. The Seonamsa Temple is pictured above.<br><br>';
+         popup51_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Seonamsa_Iljumun_11-06782.JPG">Steve46814</a>, <a href="https://whc.unesco.org/en/list/1562/">UNESCO</a>';
+       
+        var popup51 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup51_content);
+
+        var marker51 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[51].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup51) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup52_content = '<h3>Daeheungsa Temple</h3>';
+         popup52_content += '<img class="popupImage" alt="A photo of the Daeheungsa Temple" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Daeheungsa_11-03896.JPG/300px-Daeheungsa_11-03896.JPG?20121227014242"><br><br>'
+         popup52_content += 'Listed under: Sansa, Buddhist Mountain Monasteries in Korea<br>'; 
+         popup52_content += 'Date of Inscription: 2018<br>';
+         popup52_content += 'Location: Haenam County, South Jeolla<br><br>';
+         popup52_content += 'The Sansa are Buddhist mountain monasteries located throughout the southern provinces of the Korean Peninsula. The spatial arrangement of the seven temples that comprise the property, established from the 7th to 9th centuries, present common characteristics that are specific to Korea. These mountain monasteries are sacred places, which have survived as living centres of faith and daily religious practice to the present. The Daeheungsa temple is pictured above.<br><br>';
+         popup52_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Daeheungsa_11-03896.JPG">Steve46814</a>, <a href="https://whc.unesco.org/en/list/1562/">UNESCO</a>';
+       
+        var popup52 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup52_content);
+
+        var marker52 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[52].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup52) //add the popup to the marker 
+            .addTo(map);
+        
+        /* Seowon, Korean Neo-Confucian Academies */        
+        
+         var popup53_content = '<h3>Sosu-seowon</h3>';
+         popup53_content += '<img class="popupImage" alt="A photo of Sosu-seowon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Sosuseowon.jpg/300px-Sosuseowon.jpg?20120403023052"><br><br>'
+         popup53_content += 'Listed under: Seowon, Korean Neo-Confucian Academies<br>'; 
+         popup53_content += 'Date of Inscription: 2019<br>';
+         popup53_content += 'Location: Yeongju, North Gyeongsang<br><br>';
+         popup53_content += 'This site comprises nine Neo-Confucian academies in central and southern parts of Korea. They were founded during the Joseon period, from the mid-16th to mid-17th centuries. Each seowon was led by the class of local intellectuals, the sarim, and functioned as a centre of learning, veneration, and interaction with other scholars. The seowon were built close to mountains and water sources as part of appreciating nature. They demonstrate the adaptation of Neo-Confucianism ideas from China to Korea. The Sosu-seowon is pictured above.<br><br>';
+         popup53_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Sosuseowon.jpg">Jjw</a>, <a href="https://whc.unesco.org/en/list/1498/">UNESCO</a>';
+       
+        var popup53 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup53_content);
+        
+        var marker53 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[53].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup53) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup54_content = '<h3>Namgye-seowon</h3>';
+         popup54_content += '<img class="popupImage" alt="A photo of Namgye-seowon" src="file:///R:/GEOG490_590_31955_Spring2024/Student_Data/ikim3/FinalProject/rsz_2021090110052600.jpg"><br><br>'
+         popup54_content += 'Listed under: Seowon, Korean Neo-Confucian Academies<br>'; 
+         popup54_content += 'Date of Inscription: 2019<br>';
+         popup54_content += 'Location: Hamyang County, South Gyeongsang<br><br>';
+         popup54_content += 'This site comprises nine Neo-Confucian academies in central and southern parts of Korea. They were founded during the Joseon period, from the mid-16th to mid-17th centuries. Each seowon was led by the class of local intellectuals, the sarim, and functioned as a centre of learning, veneration, and interaction with other scholars. The seowon were built close to mountains and water sources as part of appreciating nature. They demonstrate the adaptation of Neo-Confucianism ideas from China to Korea. The Namgye-seowon is pictured above.<br><br>';
+         popup54_content += 'Source: <a href="https://www.cha.go.kr/newsBbz/selectNewsBbzView.do;jsessionid=wMCq7s8L8VQXkrxDw4kys2lxZKhjiDwNulfDLuyfMYeTL1tHQ96q1mTz1jdk1F4K?newsItemId=155343025&sectionId=b_sec_1&pageIndex=1&mn=NS_01_02&strWhere=&strValue=&sdate=&edate=">국가유산청</a>, <a href="https://whc.unesco.org/en/list/1498/">UNESCO</a>';
+       
+        var popup54 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup54_content);
+
+        var marker54 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[54].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup54) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup55_content = '<h3>Oksan-seowon</h3>';
+         popup55_content += '<img class="popupImage" alt="A photo of Oksan-seowon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/%EA%B2%BD%EC%A3%BC_%EC%98%A5%EC%82%B0%EC%84%9C%EC%9B%90_%EB%AC%B8%EC%A7%91%ED%8C%90%EA%B0%81.jpg/300px-%EA%B2%BD%EC%A3%BC_%EC%98%A5%EC%82%B0%EC%84%9C%EC%9B%90_%EB%AC%B8%EC%A7%91%ED%8C%90%EA%B0%81.jpg?20140106155127"><br><br>'
+         popup55_content += 'Listed under: Seowon, Korean Neo-Confucian Academies<br>'; 
+         popup55_content += 'Date of Inscription: 2019<br>';
+         popup55_content += 'Location: Gyeongju, North Gyeongsang<br><br>';
+         popup55_content += 'This site comprises nine Neo-Confucian academies in central and southern parts of Korea. They were founded during the Joseon period, from the mid-16th to mid-17th centuries. Each seowon was led by the class of local intellectuals, the sarim, and functioned as a centre of learning, veneration, and interaction with other scholars. The seowon were built close to mountains and water sources as part of appreciating nature. They demonstrate the adaptation of Neo-Confucianism ideas from China to Korea. The Oksan-seowon is pictured above.<br><br>';
+         popup55_content += 'Source: <a href="https://ko.m.wikipedia.org/wiki/%ED%8C%8C%EC%9D%BC:%EA%B2%BD%EC%A3%BC_%EC%98%A5%EC%82%B0%EC%84%9C%EC%9B%90_%EB%AC%B8%EC%A7%91%ED%8C%90%EA%B0%81.jpg">미상</a>, <a href="https://whc.unesco.org/en/list/1498/">UNESCO</a>';
+       
+        var popup55 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup55_content);
+
+        var marker55 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[55].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup55) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup56_content = '<h3>Dosan-seowon</h3>';
+         popup56_content += '<img class="popupImage" alt="A photo of Dosan-seowon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Dosanseowon1.jpg/300px-Dosanseowon1.jpg?20090401122137"><br><br>'
+         popup56_content += 'Listed under: Seowon, Korean Neo-Confucian Academies<br>'; 
+         popup56_content += 'Date of Inscription: 2019<br>';
+         popup56_content += 'Location: Andong, North Gyeongsang<br><br>';
+         popup56_content += 'This site comprises nine Neo-Confucian academies in central and southern parts of Korea. They were founded during the Joseon period, from the mid-16th to mid-17th centuries. Each seowon was led by the class of local intellectuals, the sarim, and functioned as a centre of learning, veneration, and interaction with other scholars. The seowon were built close to mountains and water sources as part of appreciating nature. They demonstrate the adaptation of Neo-Confucianism ideas from China to Korea. The Dosan-seowon is pictured above.<br><br>';
+         popup56_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Dosanseowon1.jpg">Uriah923</a>, <a href="https://whc.unesco.org/en/list/1498/">UNESCO</a>';
+       
+        var popup56 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup56_content);
+
+        var marker56 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[56].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup56) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup57_content = '<h3>Piram-seowon</h3>';
+         popup57_content += '<img class="popupImage" alt="A photo of Piram-seowon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Piramseowon_Confucian_Academy%2C_Hwakyeonru.jpg/300px-Piramseowon_Confucian_Academy%2C_Hwakyeonru.jpg?20240108124222"><br><br>'
+         popup57_content += 'Listed under: Seowon, Korean Neo-Confucian Academies<br>'; 
+         popup57_content += 'Date of Inscription: 2019<br>';
+         popup57_content += 'Location: Jangseong County, South Jeolla<br><br>';
+         popup57_content += 'This site comprises nine Neo-Confucian academies in central and southern parts of Korea. They were founded during the Joseon period, from the mid-16th to mid-17th centuries. Each seowon was led by the class of local intellectuals, the sarim, and functioned as a centre of learning, veneration, and interaction with other scholars. The seowon were built close to mountains and water sources as part of appreciating nature. They demonstrate the adaptation of Neo-Confucianism ideas from China to Korea. The Piram-seowon is pictured above.<br><br>';
+         popup57_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Piramseowon_Confucian_Academy,_Hwakyeonru.jpg">Trainholic</a>, <a href="https://whc.unesco.org/en/list/1498/">UNESCO</a>';
+       
+        var popup57 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup57_content);
+
+        var marker57 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[57].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup57) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup58_content = '<h3>Dodong-seowon</h3>';
+         popup58_content += '<img class="popupImage" alt="A photo of Dodong-seowon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Dodong1.jpg/300px-Dodong1.jpg?20230312140619"><br><br>'
+         popup58_content += 'Listed under: Seowon, Korean Neo-Confucian Academies<br>'; 
+         popup58_content += 'Date of Inscription: 2019<br>';
+         popup58_content += 'Location: Dalseong County, Daegu<br><br>';
+         popup58_content += 'This site comprises nine Neo-Confucian academies in central and southern parts of Korea. They were founded during the Joseon period, from the mid-16th to mid-17th centuries. Each seowon was led by the class of local intellectuals, the sarim, and functioned as a centre of learning, veneration, and interaction with other scholars. The seowon were built close to mountains and water sources as part of appreciating nature. They demonstrate the adaptation of Neo-Confucianism ideas from China to Korea. The Dodong-seowon is pictured above.<br><br>';
+         popup58_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Dodong1.jpg">Dittwjfsdgkvkdjg</a>, <a href="https://whc.unesco.org/en/list/1498/">UNESCO</a>';
+       
+        var popup58 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup58_content);
+
+        var marker58 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[58].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup58) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup59_content = '<h3>Byeongsan-seowon</h3>';
+         popup59_content += '<img class="popupImage" alt="A photo of Byeongsan-seowon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Korea-Andong-Byeongsan_Seowon-01.jpg/300px-Korea-Andong-Byeongsan_Seowon-01.jpg"><br><br>' 
+         popup59_content += 'Listed under: Seowon, Korean Neo-Confucian Academies<br>'; 
+         popup59_content += 'Date of Inscription: 2019<br>';
+         popup59_content += 'Location: Andong, North Gyeongsang<br><br>';
+         popup59_content += 'This site comprises nine Neo-Confucian academies in central and southern parts of Korea. They were founded during the Joseon period, from the mid-16th to mid-17th centuries. Each seowon was led by the class of local intellectuals, the sarim, and functioned as a centre of learning, veneration, and interaction with other scholars. The seowon were built close to mountains and water sources as part of appreciating nature. They demonstrate the adaptation of Neo-Confucianism ideas from China to Korea. The Byeongsan-seowon is pictured above.<br><br>';
+         popup59_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Korea-Andong-Byeongsan_Seowon-01.jpg">Robert</a>, <a href="https://whc.unesco.org/en/list/1498/">UNESCO</a>';
+       
+        var popup59 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup59_content);
+
+        var marker59 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[59].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup59) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup60_content = '<h3>Museong-seowon</h3>';
+         popup60_content += '<img class="popupImage" alt="A photo of Museong-seowon" src="file:///R:/GEOG490_590_31955_Spring2024/Student_Data/ikim3/FinalProject/rsz_6661208748ca2.jpg"><br><br>'
+         popup60_content += 'Listed under: Seowon, Korean Neo-Confucian Academies<br>'; 
+         popup60_content += 'Date of Inscription: 2019<br>';
+         popup60_content += 'Location: Jeongeup, North Jeolla<br><br>';
+         popup60_content += 'This site comprises nine Neo-Confucian academies in central and southern parts of Korea. They were founded during the Joseon period, from the mid-16th to mid-17th centuries. Each seowon was led by the class of local intellectuals, the sarim, and functioned as a centre of learning, veneration, and interaction with other scholars. The seowon were built close to mountains and water sources as part of appreciating nature. They demonstrate the adaptation of Neo-Confucianism ideas from China to Korea. The Museong-seowon is pictured above.<br><br>';
+         popup60_content += 'Source: <a href="https://www.heritage.go.kr/DATA1/heritage/hub_img/html/cul_1333501660000.html?time=">국가유산청</a>, <a href="https://whc.unesco.org/en/list/1498/">UNESCO</a>';
+       
+        var popup60 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup60_content);
+
+        var marker60 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[60].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup60) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup61_content = '<h3>Donam-seowon</h3>';
+         popup61_content += '<img class="popupImage" alt="A photo of Donam-seowon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Donam_Seowon_at_the_main_entrance.jpg/300px-Donam_Seowon_at_the_main_entrance.jpg?20140609013353"><br><br>'
+         popup61_content += 'Listed under: Seowon, Korean Neo-Confucian Academies<br>'; 
+         popup61_content += 'Date of Inscription: 2019<br>';
+         popup61_content += 'Location: Nonsan, South Chungcheong<br><br>';
+         popup61_content += 'This site comprises nine Neo-Confucian academies in central and southern parts of Korea. They were founded during the Joseon period, from the mid-16th to mid-17th centuries. Each seowon was led by the class of local intellectuals, the sarim, and functioned as a centre of learning, veneration, and interaction with other scholars. The seowon were built close to mountains and water sources as part of appreciating nature. They demonstrate the adaptation of Neo-Confucianism ideas from China to Korea. The Donam-seowon is pictured above.<br><br>';
+         popup61_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Donam_Seowon_at_the_main_entrance.jpg">Ryuch</a>, <a href="https://whc.unesco.org/en/list/1498/">UNESCO</a>';
+       
+        var popup61 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup61_content);
+
+        var marker61 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[61].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup61) //add the popup to the marker 
+            .addTo(map);
+        
+        /* Getbol, Korean Tidal Flats */ 
+        
+         var popup62_content = '<h3>Seocheon Getbol</h3>';
+         popup62_content += '<img class="popupImage" alt="A photo of a Spoon-billed Sandpiper" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Eurynorhynchus_pygmeus_2_-_Pak_Thale.jpg/300px-Eurynorhynchus_pygmeus_2_-_Pak_Thale.jpg?20190302041243"><br><br>'
+         popup62_content += 'Listed under: Getbol, Korean Tidal Flats<br>'; 
+         popup62_content += 'Date of Inscription: 2021<br>';
+         popup62_content += 'Location: Seocheon County, South Chungcheong<br><br>';
+         popup62_content += 'Getbol are mudflats, or tidal flats, coastal sedimentary systems. They are important habitats for different types of organisms, including migrating birds and marine fauna such as clams, crabs, octopuses, and snails. The site comprises four areas, each representing another type of getbol (estuarine type, open embayed type, archipelago type, and semi-enclosed type). A Spoon-billed sandpiper, a critically endangered bird species that visits the getbol during the migration, is pictured above.<br><br>';
+         popup62_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Eurynorhynchus_pygmeus_2_-_Pak_Thale.jpg">JJ Harrison</a>, <a href="https://whc.unesco.org/en/list/1591/">UNESCO</a>';
+       
+        var popup62 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup62_content);
+
+        var marker62 = new mapboxgl.Marker({className:"markerStyle2",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[62].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup62) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup63_content = '<h3>Gochang Getbol</h3>';
+         popup63_content += '<img class="popupImage" alt="A photo of the Gochang Getbol mudflats" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/%EA%B3%A0%EC%B0%BD%EA%B0%AF%EB%B2%8C.jpg/300px-%EA%B3%A0%EC%B0%BD%EA%B0%AF%EB%B2%8C.jpg"><br><br>'
+         popup63_content += 'Listed under: Getbol, Korean Tidal Flats<br>'; 
+         popup63_content += 'Date of Inscription: 2021<br>';
+         popup63_content += 'Location: Gochang County, North Jeolla<br><br>';
+         popup63_content += 'Getbol are mudflats, or tidal flats, coastal sedimentary systems. They are important habitats for different types of organisms, including migrating birds and marine fauna such as clams, crabs, octopuses, and snails. The site comprises four areas, each representing another type of getbol (estuarine type, open embayed type, archipelago type, and semi-enclosed type). The Gochang getbol is pictured above.<br><br>';
+         popup63_content += 'Source: <a href="https://en.wikipedia.org/wiki/File:%EA%B3%A0%EC%B0%BD%EA%B0%AF%EB%B2%8C.jpg">Seungh</a>, <a href="https://whc.unesco.org/en/list/1591/">UNESCO</a>';
+       
+        var popup63 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup63_content);
+
+        var marker63 = new mapboxgl.Marker({className:"markerStyle2",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[63].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup63) //add the popup to the marker 
+            .addTo(map);
+       
+         var popup64_content = '<h3>Shinan Getbol</h3>';
+         popup64_content += '<img class="popupImage" alt="A photo of the Shinan Getbol mudflats" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/KOCIS_Jeungdo_%28Jeung_Island%29%2C_near_Mokpo_City_%286285142409%29.jpg/300px-KOCIS_Jeungdo_%28Jeung_Island%29%2C_near_Mokpo_City_%286285142409%29.jpg?20140320224417"><br><br>'
+         popup64_content += 'Listed under: Getbol, Korean Tidal Flats<br>'; 
+         popup64_content += 'Date of Inscription: 2021<br>';
+         popup64_content += 'Location: Shinan County, South Jeolla<br><br>';
+         popup64_content += 'Getbol are mudflats, or tidal flats, coastal sedimentary systems. They are important habitats for different types of organisms, including migrating birds and marine fauna such as clams, crabs, octopuses, and snails. The site comprises four areas, each representing another type of getbol (estuarine type, open embayed type, archipelago type, and semi-enclosed type). The Shinan getbol is pictured above.<br><br>';
+         popup64_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:KOCIS_Jeungdo_(Jeung_Island),_near_Mokpo_City_(6285142409).jpg">Korean.net</a>, <a href="https://whc.unesco.org/en/list/1591/">UNESCO</a>';
+       
+        var popup64 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup64_content);
+
+        var marker64 = new mapboxgl.Marker({className:"markerStyle2",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[64].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup64) //add the popup to the marker 
+            .addTo(map);
+       
+         var popup65_content = '<h3>Boseong-Suncheon Getbol</h3>';
+         popup65_content += '<img class="popupImage" alt="A photo of the Boseong-Suncheon Getbol mudflats" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/20150808%EC%B5%9C%EA%B4%91%EB%AA%A8RX10DSC01732.JPG/300px-20150808%EC%B5%9C%EA%B4%91%EB%AA%A8RX10DSC01732.JPG?20150810073712"><br><br>'
+         popup65_content += 'Listed under: Getbol, Korean Tidal Flats<br>'; 
+         popup65_content += 'Date of Inscription: 2021<br>';
+         popup65_content += 'Location: Boseong County-Suncheon, South Jeolla<br><br>';
+         popup65_content += 'Getbol are mudflats, or tidal flats, coastal sedimentary systems. They are important habitats for different types of organisms, including migrating birds and marine fauna such as clams, crabs, octopuses, and snails. The site comprises four areas, each representing another type of getbol (estuarine type, open embayed type, archipelago type, and semi-enclosed type). The Boseong-Suncheon getbol is pictured above.<br><br>';
+         popup65_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:20150808%EC%B5%9C%EA%B4%91%EB%AA%A8RX10DSC01732.JPG">최광모</a>, <a href="https://whc.unesco.org/en/list/1591/">UNESCO</a>';
+       
+        var popup65 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup65_content);
+
+        var marker65 = new mapboxgl.Marker({className:"markerStyle2",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[65].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup65) //add the popup to the marker 
+            .addTo(map);
+        
+        /* Gaya Tumuli */        
+       
+         var popup66_content = '<h3>Daeseong-dong Tumuli</h3>';
+         popup66_content += '<img class="popupImage" alt="A photo of the Daeseong-dong Tumuli" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/%EA%B9%80%ED%95%B4_%EB%8C%80%EC%84%B1%EB%8F%99_%EA%B3%A0%EB%B6%84%EA%B5%B0Ancient_Tombs_in_Daeseong-dong%2C_Gimhae_02.JPG/300px-%EA%B9%80%ED%95%B4_%EB%8C%80%EC%84%B1%EB%8F%99_%EA%B3%A0%EB%B6%84%EA%B5%B0Ancient_Tombs_in_Daeseong-dong%2C_Gimhae_02.JPG?20151011012704"><br><br>'
+         popup66_content += 'Listed under: Gaya Tumuli<br>'; 
+         popup66_content += 'Date of Inscription: 2023<br>';
+         popup66_content += 'Location: Gimhae, South Gyeongsang<br><br>';
+         popup66_content += 'This site comprises seven tumuli complexes of the Gaya confederacy, from the 1st to the late 6th century CE. The seven sites correspond to the seven polities comprising the confederacy. Although they shared similar culture, they never developed into a unified state. The design of the tumuli was changing through centuries, as did the grave goods. Artifacts found at the site demonstrate the trade connections with Baekje and China. The site in Gimhae is pictured.<br><br>';
+         popup66_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:%EA%B9%80%ED%95%B4_%EB%8C%80%EC%84%B1%EB%8F%99_%EA%B3%A0%EB%B6%84%EA%B5%B0Ancient_Tombs_in_Daeseong-dong,_Gimhae_02.JPG">HappyMidnight</a>, <a href="https://whc.unesco.org/en/list/1666/">UNESCO</a>';
+       
+        var popup66 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup66_content);
+
+        var marker66 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[66].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup66) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup67_content = '<h3>Marisan Tumuli</h3>';
+         popup67_content += '<img class="popupImage" alt="A photo of the Marisan Tumuli" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Hamangun-County_43_%2816808307419%29.jpg/300px-Hamangun-County_43_%2816808307419%29.jpg?20210821105922"><br><br>'
+         popup67_content += 'Listed under: Gaya Tumuli<br>'; 
+         popup67_content += 'Date of Inscription: 2023<br>';
+         popup67_content += 'Location: Haman County, South Gyeongsang<br><br>';
+         popup67_content += 'This site comprises seven tumuli complexes of the Gaya confederacy, from the 1st to the late 6th century CE. The seven sites correspond to the seven polities comprising the confederacy. Although they shared similar culture, they never developed into a unified state. The design of the tumuli was changing through centuries, as did the grave goods. Artifacts found at the site demonstrate the trade connections with Baekje and China. The site in Haman County is pictured.<br><br>';
+         popup67_content += 'Source: Korea.net - <a href="https://www.flickr.com/photos/koreanet/16808307419/">Fickr</a>, <a href="https://whc.unesco.org/en/list/1666/">UNESCO</a>';
+       
+        var popup67 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup67_content);
+
+        var marker67 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[67].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup67) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup68_content = '<h3>Okjeon  Tumuli</h3>';
+         popup68_content += '<img class="popupImage" alt="A photo of the Okjeon Tumuli" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/%ED%95%A9%EC%B2%9C_%EC%98%A5%EC%A0%84_%EA%B3%A0%EB%B6%84%EA%B5%B0.jpg/300px-%ED%95%A9%EC%B2%9C_%EC%98%A5%EC%A0%84_%EA%B3%A0%EB%B6%84%EA%B5%B0.jpg?20200225071910"><br><br>'
+         popup68_content += 'Listed under: Gaya Tumuli<br>'; 
+         popup68_content += 'Date of Inscription: 2023<br>';
+         popup68_content += 'Location: Hapcheon County, South Gyeongsang<br><br>';
+         popup68_content += 'This site comprises seven tumuli complexes of the Gaya confederacy, from the 1st to the late 6th century CE. The seven sites correspond to the seven polities comprising the confederacy. Although they shared similar culture, they never developed into a unified state. The design of the tumuli was changing through centuries, as did the grave goods. Artifacts found at the site demonstrate the trade connections with Baekje and China. The site in Hapcheon County is pictured.<br><br>';
+         popup68_content += 'Source: <a href="http://www.heritage.go.kr/heri/cul/imgHeritage.do?ccimId=5679390&ccbaKdcd=12&ccbaAsno=20450000&ccbaCtcd=38#">국가유산청</a>, <a href="https://whc.unesco.org/en/list/1666/">UNESCO</a>';
+       
+        var popup68 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup68_content);
+
+        var marker68 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[68].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup68) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup69_content = '<h3>Jisan-dong Tumuli</h3>';
+         popup69_content += '<img class="popupImage" alt="A photo of the Jisan-dong Tumuli" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/%EA%B3%A0%EB%A0%B9_%EC%A7%80%EC%82%B0%EB%8F%99_%EA%B3%A0%EB%B6%84%EA%B5%B0.jpg/300px-%EA%B3%A0%EB%A0%B9_%EC%A7%80%EC%82%B0%EB%8F%99_%EA%B3%A0%EB%B6%84%EA%B5%B0.jpg?20211212060019"><br><br>'
+         popup69_content += 'Listed under: Gaya Tumuli<br>'; 
+         popup69_content += 'Date of Inscription: 2023<br>';
+         popup69_content += 'Location: Goryeong County, North Gyeongsang<br><br>';
+         popup69_content += 'This site comprises seven tumuli complexes of the Gaya confederacy, from the 1st to the late 6th century CE. The seven sites correspond to the seven polities comprising the confederacy. Although they shared similar culture, they never developed into a unified state. The design of the tumuli was changing through centuries, as did the grave goods. Artifacts found at the site demonstrate the trade connections with Baekje and China. The site in Goryeong County is pictured.<br><br>';
+         popup69_content += 'Source: <a href="http://www.heritage.go.kr/heri/cul/culSelectDetail.do?VdkVgwKey=13,00790000,37&pageNo=1_1_1_1">국가유산청</a>, <a href="https://whc.unesco.org/en/list/1666/">UNESCO</a>';
+       
+        var popup69 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup69_content);
+
+        var markerHapcheon = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[69].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup69) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup70_content = '<h3>Songhak-dong Tumuli</h3>';
+         popup70_content += '<img class="popupImage" alt="A photo of the Songhak-dong Tumuli" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Goseong_Seonghak_Tomb_01.JPG/300px-Goseong_Seonghak_Tomb_01.JPG?20160831231150"><br><br>'
+         popup70_content += 'Listed under: Gaya Tumuli<br>'; 
+         popup70_content += 'Date of Inscription: 2023<br>';
+         popup70_content += 'Location: Goseong County, South Gyeongsang<br><br>';
+         popup70_content += 'This site comprises seven tumuli complexes of the Gaya confederacy, from the 1st to the late 6th century CE. The seven sites correspond to the seven polities comprising the confederacy. Although they shared similar culture, they never developed into a unified state. The design of the tumuli was changing through centuries, as did the grave goods. Artifacts found at the site demonstrate the trade connections with Baekje and China. The site in Goseong County is pictured.<br><br>';
+         popup70_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Goseong_Seonghak_Tomb_01.JPG">hyolee2</a>, <a href="https://whc.unesco.org/en/list/1666/">UNESCO</a>';
+       
+        var popup70 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup70_content);
+
+        var marker70 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[70].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup70) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup71_content = '<h3>Yugok-ri and Durak-ri Tumuli</h3>';
+         popup71_content += '<img class="popupImage" alt="A photo of the Yugok-ri Tumuli" src="file:///R:/GEOG490_590_31955_Spring2024/Student_Data/ikim3/FinalProject/rsz_232022021608445800.jpg"><br><br>'
+         popup71_content += 'Listed under: Gaya Tumuli<br>'; 
+         popup71_content += 'Date of Inscription: 2023<br>';
+         popup71_content += 'Location: Namwon, South Jeolla<br><br>';
+         popup71_content += 'This site comprises seven tumuli complexes of the Gaya confederacy, from the 1st to the late 6th century CE. The seven sites correspond to the seven polities comprising the confederacy. Although they shared similar culture, they never developed into a unified state. The design of the tumuli was changing through centuries, as did the grave goods. Artifacts found at the site demonstrate the trade connections with Baekje and China. The site in Goseong County is pictured.<br><br>';
+         popup71_content += 'Source: <a href="https://www.heritage.go.kr/heri/cul/imgHeritage.do?ccimId=6703223&ccbaKdcd=13&ccbaAsno=05420000&ccbaCtcd=35">국가유산청</a>, <a href="https://whc.unesco.org/en/list/1666/">UNESCO</a>';
+       
+        var popup71 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup71_content);
+        
+        var marker71 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[71].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup71) //add the popup to the marker 
+            .addTo(map);
+        
+         var popup72_content = '<h3>Gyo-dong and Songhyeon-dong Tumuli</h3>';
+         popup72_content += '<img class="popupImage" alt="A photo of the Songhyeon-dong Tumuli" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Changnyeong_royal_graves.JPG/300px-Changnyeong_royal_graves.JPG?20220329132419"><br><br>'
+         popup72_content += 'Listed under: Gaya Tumuli<br>'; 
+         popup72_content += 'Date of Inscription: 2023<br>';
+         popup72_content += 'Location: Changnyeong County, South Gyeongsang<br><br>';
+         popup72_content += 'This site comprises seven tumuli complexes of the Gaya confederacy, from the 1st to the late 6th century CE. The seven sites correspond to the seven polities comprising the confederacy. Although they shared similar culture, they never developed into a unified state. The design of the tumuli was changing through centuries, as did the grave goods. Artifacts found at the site demonstrate the trade connections with Baekje and China. The site in Changnyeong County is pictured.<br><br>';
+         popup72_content += 'Source: <a href="https://commons.wikimedia.org/wiki/File:Changnyeong_royal_graves.JPG">Timothyvail</a>, <a href="https://whc.unesco.org/en/list/1666/">UNESCO</a>';
+       
+        var popup72 = new mapboxgl.Popup({ minWidth:'300px' })
+        .setHTML(popup72_content);
+
+        var marker72 = new mapboxgl.Marker({className:"markerStyle1",color:'rgba(0,0,0,0.0)'})
+            .setLngLat(WHC_sites.features[72].geometry.coordinates) // starting position [lng, lat]
+            .setPopup(popup72) //add the popup to the marker 
+            .addTo(map);
+        
+        function flyToCity(cityNumber, zoomLevel)
+        {
+           map.flyTo({
+                center: WHC_sites.features[cityNumber].geometry.coordinates, 
+                zoom: zoomLevel,
+                speed: 0.75
+            });  
+        }
+        
+        map.on('zoomend', function(e){
+               console.log(map.getZoom())
+        });
+        
+    </script>
+
+</body>
+</html>
