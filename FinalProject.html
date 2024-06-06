@@ -12,24 +12,26 @@
    <!--   Link to Google font-->
    <link rel="preconnect" href="https://fonts.gstatic.com">
    <link href="https://fonts.googleapis.com/css2?family=Martel&display=swap" rel="stylesheet">
+
+   <!--   Link to Styling font-->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     
     
     <style>
         
         
-   /*  stlye for paragraph tags */
+   /*  style for paragraph tags */
    button > p, .descriptionPanel > p {
      color: white;
    }
 
-   /* style for heading level 4 tags */
+   /* Style for heading level 4 tags */
    h4 {
      color: white;
      margin-left: 10px;
    }
 
-   /*  style for items with the class "LegendContainer" */
+   /*  Style for items with the class "LegendContainer" */
    .LegendContainer {
      position: absolute;
      bottom: 20px;
@@ -146,7 +148,9 @@
         }
         
        h1 {text-align: center left;}
-        
+
+   /* Enables scrolling feature  */
+	    
     .scrolling-element-inside {
       direction: ltr;
     }
@@ -154,7 +158,9 @@
     </style>
 </head>
 <body>
-    
+
+   /* Sidepanel features  */
+	
     <div id="leftPanel"> 
     <div class="w3-sidebar w3-bar-block w3-medium w3-white" style="width:20%">
      <p style="margin-left: 10px; margin-right: 10px;">
@@ -261,7 +267,8 @@
     </div>
     <div id='map'></div>
     <br/>
-    
+
+     // Description Panel
    <div class="descriptionPanel" id="descriptionPanel" style="height: 350px;">
      <span onClick=panelSelect() id="glyph" class="chevron glyphicon glyphicon-chevron-down"></span>
      <hr/>
