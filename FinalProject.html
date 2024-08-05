@@ -158,14 +158,6 @@
     </style>
 </head>
 <body>
-
-    <!--  Div for map view selector, with regular view selected by default -->
-    <div id="menu">
-        <input id="streets-v12" type="radio" name="rtoggle" value="satellite" checked="checked">
-        <label for="streets-v12">regular view</label>
-        <input id="clx10wfvb01mm01rd6nzhc3y3" type="radio" name="rtoggle" value="light">
-        <label for="clx10wfvb01mm01rd6nzhc3y3">satellite view</label>
-    </div>
 	
        <!-- Enables click to zoom on places in the description panel -->
     <div id="leftPanel"> 
@@ -337,17 +329,6 @@
             minZoom: 4,
             maxBounds: bounds // Sets bounds from variable above
         });
-
-        // allows for clicking map view buttons to change style
-        const layerList = document.getElementById('menu');
-        const inputs = layerList.getElementsByTagName('input');
-
-        for (const input of inputs) {
-            input.onclick = (layer) => {
-                const layerId = layer.target.id;
-                map.setStyle('mapbox://styles/mapbox/' + layerId); //Allows for pulling map style from two different custom mapbox styles
-            };
-        }
         
         // data sources used from UNESCo World Heritage List Database: https://whc.unesco.org/en/syndication
       var WHC_sites =  {
